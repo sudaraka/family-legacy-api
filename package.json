@@ -13,6 +13,7 @@
   "author": "Sudaraka Wijesinghe <sudaraka@sudaraka.org> (http://sudaraka.org/)",
   "devDependencies": {
     "grunt": "^0.4.5",
+    "grunt-shell": "^1.1.2",
     "load-grunt-tasks": "^3.1.0"
   }
 }
