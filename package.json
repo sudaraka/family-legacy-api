@@ -1,0 +1,18 @@
+{
+  "name": "family-legacy-api",
+  "version": "0.1.0",
+  "description": "API for Family Legacy web and mobile application",
+  "main": "server.py",
+  "scripts": {
+    "test": "test.py"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://bitbucket.org/sudaraka/family-legacy-api"
+  },
+  "author": "Sudaraka Wijesinghe <sudaraka@sudaraka.org> (http://sudaraka.org/)",
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "load-grunt-tasks": "^3.1.0"
+  }
+}
