@@ -1,3 +1,5 @@
+.ropeproject/
 node_modules/
+__pycache__
 grunt-param.json
 *.log
