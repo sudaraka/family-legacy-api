@@ -5,6 +5,16 @@ server.py: runs development server
 
 import os
 
+
+if os.path.exists('.env'):
+    print('Importing environment from .env')  # pylint: disable=I0011,C0325
+
+    for line in open('.env'):
+        var = line.strip().split('=')
+        if 2 == len(var):
+            os.environ[var[0]] = var[1]
+
+
 from src.app import create_app, db
 
 
