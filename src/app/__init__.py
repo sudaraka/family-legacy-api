@@ -2,7 +2,7 @@
 
 import os
 
-from flask import Flask
+from flask import Flask, render_template
 from flask.ext.sqlalchemy import SQLAlchemy
 
 from ..config import config_map
@@ -22,5 +22,11 @@ def create_app(config_name):
 
     # Initialize extensions in application context
     db.init_app(app)
+
+    @app.route('/')
+    def app_home():
+        """ Homepage for API application """
+
+        return render_template('index.html')
 
     return app
