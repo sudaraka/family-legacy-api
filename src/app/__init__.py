@@ -23,6 +23,10 @@ def create_app(config_name):
     # Initialize extensions in application context
     db.init_app(app)
 
+    # Register blueprints
+    from .api_v1 import api as api_blueprint_1
+    app.register_blueprint(api_blueprint_1, url_prefix='/v1')
+
     @app.route('/')
     def app_home():
         """ Homepage for API application """
