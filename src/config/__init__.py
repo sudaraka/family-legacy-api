@@ -8,7 +8,17 @@ class BaseConfiguration(object):
 
     DEBUG = True
 
-    SECRET_KEY = os.environ.get('SECRET_KEY', 'OuK5jz82GD33Dy7LzD5UX2Gj956Cz89')
+    SECRET_KEY = os.environ.get('FLAPI_SECRET_KEY',
+                                'g78v6R5aA59qg7u63fH68n8ap5g2FC5x')
+
+    SQLALCHEMY_ECHO = True
+
+    SQLALCHEMY_DATABASE_URI = 'mysql://%s:%s@%s/%s' % (
+        os.environ.get('FLAPI_DB_USER', 'flapi'),
+        os.environ.get('FLAPI_DB_PW', ''),
+        os.environ.get('FLAPI_DB_HOST', 'localhost'),
+        os.environ.get('FLAPI_DB_NAME', 'flapi'),
+    )
 
 
 from .development import DevelopmentConfiguration
