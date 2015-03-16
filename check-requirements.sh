@@ -3,7 +3,7 @@
 TEMPFILE='/tmp/requirements.txt'
 
 pip freeze | sort > $TEMPFILE 2>/dev/null
-DIFF="`cat requirements/*|grep -v '\-r '|sort|diff $TEMPFILE - 2>/dev/null`"
+DIFF="`cat requirements/*|grep -v '\-r '|sort|diff $TEMPFILE -|grep '==' 2>/dev/null`"
 
 if [ -z "$DIFF" ]; then
     exit 1
