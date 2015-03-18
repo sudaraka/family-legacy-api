@@ -5,9 +5,9 @@ import os
 from flask import Flask, render_template
 from flask.ext.sqlalchemy import SQLAlchemy
 
-from ..config import config_map
-
 app_dir = os.path.abspath(os.path.dirname(__file__))
+
+from ..config import config_map
 
 db = SQLAlchemy()
 
