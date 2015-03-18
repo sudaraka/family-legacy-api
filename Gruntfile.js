@@ -9,6 +9,19 @@ module.exports = function(g) {
         param:  _param,
         venv_home: '$HOME/opt/virtualenv/flapi/',
 
+        // {{{ watch
+        watch: {
+            docs: {
+                files: [
+                    'src/docs/conf.py',
+                    'src/docs/**/*.rst',
+                    'src/app/api_v1/**/*.py'
+                ],
+                tasks: ['shell:build_doc']
+            }
+        },
+        // }}}
+
         // shell {{{
         shell: {
             setup: {
@@ -30,7 +43,7 @@ module.exports = function(g) {
 
     });
 
-    g.registerTask('default', []);
+    g.registerTask('default', ['watch']);
     g.registerTask('setup', ['shell:setup']);
     g.registerTask('doc', ['shell:build_doc']);
 
