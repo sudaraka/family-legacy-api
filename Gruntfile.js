@@ -20,6 +20,10 @@ module.exports = function(g) {
                     'source <%= venv_home %>bin/activate',
                     'pip install -Ur requirements/' + g.option('env', 'dev') + '.txt',
                 ].join(' && ')
+            },
+
+            build_doc: {
+                command: 'sphinx-build -b html src/docs src/docs/_build'
             }
         }
         // }}}
@@ -28,6 +32,7 @@ module.exports = function(g) {
 
     g.registerTask('default', []);
     g.registerTask('setup', ['shell:setup']);
+    g.registerTask('doc', ['shell:build_doc']);
 
 };
 
