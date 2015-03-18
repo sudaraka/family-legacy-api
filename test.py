@@ -17,3 +17,4 @@ if '__main__' == __name__:
 
     _coverage.stop()
     _coverage.report()
+    _coverage.html_report()

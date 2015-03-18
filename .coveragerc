@@ -1,3 +1,7 @@
 [run]
 branch = True
 source = src/app
+
+[html]
+directory = src/tests/coverage/
+title = Family Legacy API - Test Coverage

@@ -1,0 +1,10 @@
+*
+!.gitignore
+!jquery.hotkeys.js
+!jquery.min.js
+!keybd_open.png
+!index.html
+!keybd_closed.png
+!coverage_html.js
+!jquery.tablesorter.min.js
+!style.css
