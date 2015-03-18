@@ -1,8 +1,15 @@
 """ Tests for API error handling """
 
-from unittest import TestCase
+from . import BaseCase
 
 
-class ErrorsTest(TestCase):
+class ErrorsTest(BaseCase):
     """ Errors test case """
-    pass
+
+    def test_404(self):
+        """ Invalid URLs must generate 404 error """
+
+        response = self.client.get('/v1/bad-url/')
+
+        self.assert404(response)
+        self.assertEqual('not found', response.json['error'])

@@ -1,2 +1,4 @@
 -r common.txt
 coverage==3.7.1
+Flask-Testing==0.4.2
+blinker==1.3
