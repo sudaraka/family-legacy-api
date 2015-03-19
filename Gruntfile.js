@@ -31,7 +31,7 @@ module.exports = function(g) {
                     'mkdir -p <%= venv_home %>Scripts/',
                     'touch <%= venv_home %>Scripts/activate_this.py',
                     'source <%= venv_home %>bin/activate',
-                    'pip install -Ur requirements/' + g.option('env', 'dev') + '.txt',
+                    'pip install -Ur requirements/' + g.option('env', 'development') + '.txt',
                 ].join(' && ')
             },
 
