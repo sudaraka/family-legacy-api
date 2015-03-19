@@ -1,4 +1,5 @@
 #!/usr/bin/env sh
+# check-requirements.sh: show installed python packages that are missing in requirements/*
 
 TEMPFILE='/tmp/requirements.txt'
 

@@ -1,4 +1,5 @@
 #!/usr/bin/env sh
+# launch-staging-vm.sh: load/build VirtualBox modules and start VM
 
 LOGFILE='/tmp/.vmlog'
 
