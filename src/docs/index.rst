@@ -6,6 +6,11 @@
 Family Legacy API
 =================
 
+This document provides the information you need to access back-end resources for
+"Family Legacy" application, and details on how to provision and deploythe API
+it self.
+
+
 .. autoflask:: src.app:create_app('dev')
     :undoc-static:
     :blueprints: api_v1
