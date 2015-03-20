@@ -30,18 +30,18 @@ if [ 0 -ne $? ]; then
     fi
 fi
 
-VMID="`VBoxManage list vms|grep 'FL Staging'|cut -d'{' -f2|cut -d'}' -f1`"
+VM_NAME='FL Staging Server'
 
-if [ -z "$VMID" ]; then
-    echo 'Virtual machine with name "FL Staging" not found'
+if [ -z "`VBoxManage list vms|grep \"$VM_NAME\"`" ]; then
+    echo "Virtual machine with name '$VM_NAME' not found"
 
     exit 1
 fi
 
-if [ ! -z "`VBoxManage list runningvms|grep '$VMID'`" ]; then
+if [ ! -z "`VBoxManage list runningvms|grep \"$VM_NAME\"`" ]; then
     echo 'Virtual machine is already running.'
 else
-    VBoxManage startvm $VMID --type headless >$LOGFILE 2>&1
+    VBoxManage startvm "$VM_NAME" --type headless >$LOGFILE 2>&1
 
     if [ 0 -ne $? ]; then
         echo 'Failed to start virtual machine'
