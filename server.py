@@ -15,7 +15,8 @@ if os.path.exists('.env'):
             os.environ[var[0]] = var[1]
 
 
-from src.app import create_app, db
+# Import models to context so they will be created when script runs
+from src.app import create_app, db, models
 
 
 if '__main__' == __name__:
