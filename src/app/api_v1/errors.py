@@ -14,3 +14,14 @@ def http_not_found(e):
         'error': 'not found',
         'message': 'Requested resource does not exists'
     }), 404
+
+
+@api.app_errorhandler(500)
+def http_internal_server_error(e):
+    """ Return HTTP 500 response """
+
+    return jsonify({
+        'status': 500,
+        'error': 'internal server error',
+        'message': e.args[0]
+    }), 500
