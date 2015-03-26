@@ -1,5 +1,7 @@
 """ Person data model """
 
+from . import SerializeAPI
+
 from .. import db
 
 person_status = [
@@ -10,7 +12,7 @@ person_status = [
 ]
 
 
-class Person(db.Model):
+class Person(db.Model, SerializeAPI):
     """ Person data model declarations """
 
     __tablename__ = 'flapi_persons'
