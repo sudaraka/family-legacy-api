@@ -1,5 +1,7 @@
 """ Person data model """
 
+from flask import url_for
+
 from . import SerializeAPI
 
 from .. import db
@@ -25,3 +27,14 @@ class Person(db.Model, SerializeAPI):
     last_name = db.Column(db.String(32), nullable=False)
     email = db.Column(db.String(64), nullable=False, unique=True, index=True)
     avatar = db.Column(db.String(128))
+
+    def to_dict(self):
+        """ Return current instance converted to Python a dictionary """
+
+        result = super().to_dict()
+
+        result['_links'] = {
+            'self': url_for('api.get_person', id=self.id, _external=True)
+        }
+
+        return result
