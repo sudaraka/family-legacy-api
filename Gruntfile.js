@@ -15,7 +15,7 @@ module.exports = function(g) {
                 files: [
                     'src/docs/conf.py',
                     'src/docs/**/*.rst',
-                    'src/app/api_v1/**/*.py'
+                    'src/app/api/**/*.py'
                 ],
                 tasks: ['shell:build_doc']
             }

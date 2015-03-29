@@ -9,7 +9,7 @@ class ErrorsTest(BaseCase):
     def test_404(self):
         """ Invalid URLs must generate 404 error """
 
-        response = self.client.get('/v1/bad-url/')
+        response = self.client.get('/bad-url/')
 
         self.assert404(response)
         self.assertEqual('not found', response.json['error'])

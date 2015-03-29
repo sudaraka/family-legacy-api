@@ -1,4 +1,4 @@
-""" API v1 Blueprint """
+""" API Blueprint """
 
 from flask import Blueprint
 

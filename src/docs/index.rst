@@ -17,4 +17,4 @@ This document provides the information you need to access back-end resources for
 
 .. autoflask:: src.app:create_app('dev')
     :undoc-static:
-    :blueprints: api_v1
+    :blueprints: api

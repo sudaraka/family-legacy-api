@@ -9,15 +9,15 @@ class PersonsTest(BaseCase):
     """ /persons/ test case """
 
     def test_get_non_existing(self):
-        """ GET /v1/persons/1 on empty DB must return HTTP 404 """
+        """ GET /persons/1 on empty DB must return HTTP 404 """
 
-        response = self.client.get('/v1/persons/1')
+        response = self.client.get('/persons/1')
 
         self.assert404(response)
         self.assertEqual('not found', response.json['error'])
 
     def test_get_existing(self):
-        """ GET /v1/persons/1 on DB with valid record must return it """
+        """ GET /persons/1 on DB with valid record must return it """
 
         p = Person(first_name='Test First Name', last_name='Test Last Name',
                    email='Test Email')
@@ -25,7 +25,7 @@ class PersonsTest(BaseCase):
         db.session.add(p)
         db.session.commit()
 
-        response = self.client.get('/v1/persons/1')
+        response = self.client.get('/persons/1')
 
         self.assert200(response)
         self.assertEqual(1, response.json['id'])
@@ -33,4 +33,4 @@ class PersonsTest(BaseCase):
         self.assertEqual('Test First Name', response.json['first_name'])
         self.assertEqual('Test Last Name', response.json['last_name'])
         self.assertEqual('Test Email', response.json['email'])
-        self.assertIn('/v1/persons/1', response.json['_links']['self'])
+        self.assertIn('/persons/1', response.json['_links']['self'])

@@ -24,8 +24,8 @@ def create_app(config_name):
     db.init_app(app)
 
     # Register blueprints
-    from .api_v1 import api as api_blueprint_1
-    app.register_blueprint(api_blueprint_1, url_prefix='/v1')
+    from .api import api as api_blueprint
+    app.register_blueprint(api_blueprint, url_prefix='')
 
     @app.route('/')
     def app_home():
