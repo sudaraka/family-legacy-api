@@ -15,6 +15,10 @@ This document provides the information you need to access back-end resources for
 
     provisioning
 
-.. autoflask:: src.app:create_app('dev')
-    :undoc-static:
-    :blueprints: api
+API
+---
+
+.. toctree::
+    :maxdepth: 1
+
+    api_person
