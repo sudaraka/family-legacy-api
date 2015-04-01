@@ -5,23 +5,23 @@ LOGFILE='/tmp/.vmlog'
 
 echo "========= `date` ========="  >> $LOGFILE
 
-sudo modprobe vboxdrv 2>$LOGFILE && \
-    sudo modprobe vboxpci 2>$LOGFILE && \
-    sudo modprobe vboxnetadp 2>$LOGFILE && \
-    sudo modprobe vboxnetflt 2>$LOGFILE
+sudo modprobe vboxdrv 2>>$LOGFILE && \
+    sudo modprobe vboxpci 2>>$LOGFILE && \
+    sudo modprobe vboxnetadp 2>>$LOGFILE && \
+    sudo modprobe vboxnetflt 2>>$LOGFILE
 
 if [ 0 -ne $? ]; then
     KERNEL_MODULE="`find /usr/src -type d -name 'vboxhost*' -exec basename {} \;|sed 's/-/\//'`"
 
-    echo 'Building VirtualBox kernel modules...'
+    echo "Building VirtualBox kernel module $KERNEL_MODULE"
 
-    sudo dkms uninstall $KERNEL_MODULE >$LOGFILE 2>&1
-    sudo dkms install $KERNEL_MODULE >$LOGFILE 2>&1
+    sudo dkms uninstall $KERNEL_MODULE >>$LOGFILE 2>&1
+    sudo dkms install $KERNEL_MODULE >>$LOGFILE 2>&1
 
-    sudo modprobe vboxdrv 2>$LOGFILE && \
-        sudo modprobe vboxpci 2>$LOGFILE && \
-        sudo modprobe vboxnetadp 2>$LOGFILE && \
-        sudo modprobe vboxnetflt 2>$LOGFILE
+    sudo modprobe vboxdrv 2>>$LOGFILE && \
+        sudo modprobe vboxpci 2>>$LOGFILE && \
+        sudo modprobe vboxnetadp 2>>$LOGFILE && \
+        sudo modprobe vboxnetflt 2>>$LOGFILE
 
     if [ 0 -ne $? ]; then
         echo 'Failed to load VirtualBox kernel modules.'
@@ -41,7 +41,7 @@ fi
 if [ ! -z "`VBoxManage list runningvms|grep \"$VM_NAME\"`" ]; then
     echo 'Virtual machine is already running.'
 else
-    VBoxManage startvm "$VM_NAME" --type headless >$LOGFILE 2>&1
+    VBoxManage startvm "$VM_NAME" --type headless >>$LOGFILE 2>&1
 
     if [ 0 -ne $? ]; then
         echo 'Failed to start virtual machine'

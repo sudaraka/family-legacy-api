@@ -24,3 +24,13 @@ Python 3
 3. Install **pip** via easy_install with python33 SCL is enabled.
 
    ``scl enable python33 'easy_install pip'``
+
+User
+----
+
+Create user and group named **flapi**. API application will be installed into
+the home directory of this user and run in the same context.
+
+Note: *this user should have minimal privileges and not remote access.*
+
+    ``adduser -m -s /bin/sh -U flapi``
