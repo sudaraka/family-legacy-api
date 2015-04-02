@@ -11,7 +11,7 @@ echo 'Family Legacy API - Server Provisioning'
 echo '---------------------------------------'
 echo ''
 
-# Update system
+# Update system {{{
 
 echo 'Updating packages'
 
@@ -19,8 +19,18 @@ yum update -y -q
 
 echo ''
 
+# }}}
 
-# Install Python 3 from software collections
+# Install Git {{{
+
+echo 'Installing Git...'
+yum install -y -q git
+
+echo ''
+
+# }}}
+
+# Install Python 3 from software collections {{{
 
 echo 'Installing SCL utilities...'
 yum install -y -q scl-utils centos-release-SCL
@@ -34,8 +44,9 @@ echo "`scl enable python33 'python --version'` installed."
 
 echo ''
 
+# }}}
 
-# Setup user for the application
+# Setup user for the application {{{
 
 USER='flapi'
 
@@ -56,6 +67,8 @@ fi;
 HOME=`cat /etc/passwd|grep "^$USER:"|cut -d: -f6`
 
 echo ''
+
+# }}}
 
 
 echo "Note: install you application to $HOME"

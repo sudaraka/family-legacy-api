@@ -25,6 +25,16 @@ Python 3
 
    ``scl enable python33 'easy_install pip'``
 
+
+Git
+---
+
+Application will be deployed via **git** (among other things), there for is a
+critical part of the target environment.
+
+   ``yum install git``
+
+
 User
 ----
 
