@@ -3,32 +3,44 @@
 
 LOGFILE='/tmp/.vmlog'
 
+function load_modules() {
+    VB_MODULES='vboxdrv vboxpci vboxnetadp vboxnetflt'
+    LOAD_ERROR=0
+
+    for MOD in $VB_MODULES; do
+        if [ -z "`lsmod|grep ^$MOD`" ]; then
+            sudo modprobe $MOD 2>>$LOGFILE
+
+            if [ 0 -ne $? ]; then
+                LOAD_ERROR=1
+                break
+            fi;
+        fi;
+    done;
+
+    if [ 0 -ne $LOAD_ERROR ]; then
+        KERNEL_MODULE="`find /usr/src -type d -name 'vboxhost*' -exec basename {} \;|sed 's/-/\//'`"
+
+        echo "Building VirtualBox kernel module $KERNEL_MODULE"
+
+        sudo dkms uninstall $KERNEL_MODULE >>$LOGFILE 2>&1
+        sudo dkms install $KERNEL_MODULE >>$LOGFILE 2>&1
+
+        load_modules
+
+        if [ 0 -ne $? ]; then
+            echo 'Failed to load VirtualBox kernel modules.'
+
+            return 1
+        fi
+    fi
+
+    return 0
+}
+
 echo "========= `date` ========="  >> $LOGFILE
 
-sudo modprobe vboxdrv 2>>$LOGFILE && \
-    sudo modprobe vboxpci 2>>$LOGFILE && \
-    sudo modprobe vboxnetadp 2>>$LOGFILE && \
-    sudo modprobe vboxnetflt 2>>$LOGFILE
-
-if [ 0 -ne $? ]; then
-    KERNEL_MODULE="`find /usr/src -type d -name 'vboxhost*' -exec basename {} \;|sed 's/-/\//'`"
-
-    echo "Building VirtualBox kernel module $KERNEL_MODULE"
-
-    sudo dkms uninstall $KERNEL_MODULE >>$LOGFILE 2>&1
-    sudo dkms install $KERNEL_MODULE >>$LOGFILE 2>&1
-
-    sudo modprobe vboxdrv 2>>$LOGFILE && \
-        sudo modprobe vboxpci 2>>$LOGFILE && \
-        sudo modprobe vboxnetadp 2>>$LOGFILE && \
-        sudo modprobe vboxnetflt 2>>$LOGFILE
-
-    if [ 0 -ne $? ]; then
-        echo 'Failed to load VirtualBox kernel modules.'
-
-        exit 1;
-    fi
-fi
+load_modules
 
 VM_NAME='FL Staging Server'
 
@@ -51,5 +63,7 @@ else
 
     echo 'Virtual machine started!'
 
-    sudo dhcpcd -qb vboxnet0
+    if [ -z "`ip addr show vboxnet0|grep 'inet 10\.0\.0\.'`" ]; then
+        sudo dhcpcd -qb vboxnet0
+    fi
 fi
