@@ -11,7 +11,7 @@ from ..decorators import json
 @json
 def get_person(id):  # pylint: disable=I0011,W0622
     """
-    Returns single person with the given ``id``.
+    Returns single *person* with the given ``id``.
 
     .. sourcecode:: http
 
@@ -27,10 +27,10 @@ def get_person(id):  # pylint: disable=I0011,W0622
                 "self": "/persons/1"
             },
             "avatar": null,
-            "email": "persom1@example.com",
-            "first_name": "First Name",
+            "email": "jdoe@example.com",
+            "first_name": "John",
             "id": 1,
-            "last_name": "Last Name",
+            "last_name": "Doe",
             "status": "UNPAID"
         }
 
