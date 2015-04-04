@@ -1,10 +1,8 @@
 """ Tests for Person Model """
 
-from sqlalchemy.exc import IntegrityError
-
 from . import BaseCase
-from ..app import db
 from ..app.models import Person
+from ..app.exceptions import IncompleteData
 
 
 class PersonTest(BaseCase):
@@ -26,9 +24,8 @@ class PersonTest(BaseCase):
 
         p = Person()
 
-        with self.assertRaises(IntegrityError):
-            db.session.add(p)
-            db.session.commit()
+        with self.assertRaises(IncompleteData):
+            p.save()
 
     def test_save_person(self):
         """
@@ -38,8 +35,7 @@ class PersonTest(BaseCase):
         p = Person(first_name='Test First Name', last_name='Test Last Name',
                    email='Test Email')
 
-        db.session.add(p)
-        db.session.commit()
+        p.save()
 
         self.assertEqual(1, p.id)
         self.assertEqual('UNPAID', p.status)
