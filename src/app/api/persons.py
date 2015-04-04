@@ -48,7 +48,8 @@ def create_person():  # pylint: disable=I0011,W0622
     """
     """
 
-    p = Person.from_dict(request.json)
+    p = Person()
+    p.from_dict(request.json)
     p.save()
 
     return {}, 201, {'Location': p.url()}
