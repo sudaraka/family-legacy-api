@@ -3,11 +3,30 @@
 from sqlalchemy.exc import IntegrityError
 
 from .. import db
-from ..exceptions import IncompleteData
+from ..exceptions import NoData, IncompleteData
 
 
 class SerializeAPI(object):
     """ Shared methods to convert object from/to Python dictionary """
+
+    @classmethod
+    def from_dict(cls, data):
+        """
+        Return a new object initialized with data in the given dictionary
+        """
+
+        obj = cls()
+
+        try:
+            for field, value in data.items():
+                if 'id' == field:
+                    value = int(value)
+
+                setattr(obj, field, value)
+        except AttributeError:
+            raise NoData('No data given to create ' + cls.__name__)
+
+        return obj
 
     def to_dict(self):
         """ Return current instance converted to Python a dictionary """
