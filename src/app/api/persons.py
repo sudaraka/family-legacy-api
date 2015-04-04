@@ -53,3 +53,16 @@ def create_person():  # pylint: disable=I0011,W0622
     p.save()
 
     return {}, 201, {'Location': p.url()}
+
+
+@api.route('/persons/<int:id>', methods=['PUT'])
+@json
+def edit_person(id):  # pylint: disable=I0011,W0622
+    """
+    """
+
+    p = Person.query.get_or_404(id)
+    p.from_dict(request.json)
+    p.save()
+
+    return {}
