@@ -11,7 +11,7 @@ class APIModel(object):
 
     def from_dict(self, data):
         """
-        Return a new object initialized with data in the given dictionary
+        Initialize object instance with data in the given dictionary
         """
 
         try:

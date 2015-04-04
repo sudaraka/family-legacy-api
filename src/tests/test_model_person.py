@@ -2,7 +2,7 @@
 
 from . import BaseCase
 from ..app.models import Person
-from ..app.exceptions import IncompleteData, AccessViolation
+from ..app.exceptions import IncompleteData, AccessViolation, IncorrectData
 
 
 class PersonTest(BaseCase):
@@ -113,3 +113,14 @@ class PersonTest(BaseCase):
 
         self.assertIsNone(p.id)
         self.assertEquals('test email', p.email)
+
+    def test_from_dict_can_not_pass_invalid_status(self):
+        """
+        When dictionary with "status" field passed into Person.from_dict, it
+        must contains an acceptable value
+        """
+
+        p = Person()
+
+        with self.assertRaises(IncorrectData):
+            p.from_dict({'status': 'NOT_VALID', 'email': 'test email'})

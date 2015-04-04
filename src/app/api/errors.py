@@ -3,7 +3,7 @@
 from flask import jsonify
 
 from . import api
-from ..exceptions import IncompleteData, NoData
+from ..exceptions import IncompleteData, NoData, IncorrectData
 
 
 @api.app_errorhandler(404)
@@ -41,6 +41,7 @@ def http_internal_server_error(e):
 
 @api.app_errorhandler(NoData)
 @api.app_errorhandler(IncompleteData)
+@api.app_errorhandler(IncorrectData)
 def exception_incomplete_data(e):
     """ Return HTTP 400 response when missing or no modal data """
 

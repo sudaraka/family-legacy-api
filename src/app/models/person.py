@@ -8,7 +8,7 @@ from . import APIModel
 
 from .. import db
 
-from ..exceptions import AccessViolation
+from ..exceptions import AccessViolation, IncorrectData
 
 
 person_status = [
@@ -57,6 +57,18 @@ class Person(db.Model, APIModel):
         """
 
         return check_password_hash(self.password_hash, password)
+
+    def from_dict(self, data):
+        """
+        Initialize object instance with data in the given dictionary
+        """
+
+        if data is not None and 'status' in data \
+                and data['status'] not in person_status:
+            raise IncorrectData('Status \'' + data['status']
+                                + '\' is not valid')
+
+        super().from_dict(data)
 
     def to_dict(self):
         """

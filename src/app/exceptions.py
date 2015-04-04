@@ -6,6 +6,11 @@ class AccessViolation(Exception):
     pass
 
 
+class IncorrectData(AttributeError):
+    """ JSON data given in the HTTP request is not acceptable """
+    pass
+
+
 class NoData(AttributeError):
     """ JSON data is missing in the HTTP request """
     pass
