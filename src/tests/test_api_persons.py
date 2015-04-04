@@ -78,3 +78,35 @@ class PersonsTest(BaseCase):
         response = self.client.get('/persons/')
 
         self.assert405(response)
+
+    def test_edit_non_existing(self):
+        """ PUT /persons/1 on empty DB must return HTTP 404 """
+
+        response = self.client.put('/persons/1')
+
+        self.assert404(response)
+        self.assertEqual('not found', response.json['error'])
+
+    def test_edit_existing(self):
+        """ PUT /persons/1 on DB with valid record must modify it """
+
+        p1 = Person(first_name='Test First Name', last_name='Test Last Name',
+                    email='Test Email')
+        p1.save()
+
+        changes = {
+            'first_name': 'Modified First Name',
+            'last_name': 'Modified Last Name',
+            'email': 'Modified Email'
+        }
+
+        response = self.client.put('/persons/1', data=json.dumps(changes),
+                                   content_type='application/json')
+        self.assert200(response)
+
+        p2 = Person.query.get(1)
+
+        self.assertEqual(1, p2.id)
+        self.assertEqual('Modified First Name', p2.first_name)
+        self.assertEqual('Modified Last Name', p2.last_name)
+        self.assertEqual('Modified Email', p2.email)
