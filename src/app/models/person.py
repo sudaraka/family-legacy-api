@@ -28,13 +28,7 @@ class Person(db.Model, SerializeAPI):
     email = db.Column(db.String(64), nullable=False, unique=True, index=True)
     avatar = db.Column(db.String(128))
 
-    def to_dict(self):
-        """ Return current instance converted to Python a dictionary """
+    def url(self):
+        """ Return the HTTP GET URL for this object """
 
-        result = super().to_dict()
-
-        result['_links'] = {
-            'self': url_for('api.get_person', id=self.id, _external=True)
-        }
-
-        return result
+        return url_for('api.get_person', id=self.id, _external=True)

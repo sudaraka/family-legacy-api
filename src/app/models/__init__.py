@@ -7,7 +7,13 @@ class SerializeAPI(object):
     def to_dict(self):
         """ Return current instance converted to Python a dictionary """
 
-        return {k: v for k, v in self.__dict__.items() if k[0] != '_'}
+        result = {k: v for k, v in self.__dict__.items() if k[0] != '_'}
+
+        result['_links'] = {
+            'self': self.url()
+        }
+
+        return result
 
 
 from .person import Person
