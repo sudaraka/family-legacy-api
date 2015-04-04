@@ -42,7 +42,7 @@ def json(f):
             response.status_code = status
 
         if headers is not None:
-            result.headers.extend(headers)
+            response.headers.extend(headers)
 
         return response
 

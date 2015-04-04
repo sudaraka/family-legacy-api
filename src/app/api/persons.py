@@ -1,5 +1,7 @@
 """ persons API resource """
 
+from flask import request
+
 from . import api
 from ..models import Person
 from ..decorators import json
@@ -38,3 +40,15 @@ def get_person(id):  # pylint: disable=I0011,W0622
     """
 
     return Person.query.get_or_404(id)
+
+
+@api.route('/persons/', methods=['POST'])
+@json
+def create_person():  # pylint: disable=I0011,W0622
+    """
+    """
+
+    p = Person.from_dict(request.json)
+    p.save()
+
+    return {}, 201, {'Location': p.url()}
