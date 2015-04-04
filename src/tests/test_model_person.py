@@ -101,3 +101,15 @@ class PersonTest(BaseCase):
 
         self.assertFalse('password' in d)
         self.assertFalse('password_hash' in d)
+
+    def test_from_dict_must_ignore_id(self):
+        """
+        When dictionary with "id" field passed into Person.from_dict, it must
+        not change the instance value
+        """
+
+        p = Person()
+        p.from_dict({'id': 500, 'email': 'test email'})
+
+        self.assertIsNone(p.id)
+        self.assertEquals('test email', p.email)
