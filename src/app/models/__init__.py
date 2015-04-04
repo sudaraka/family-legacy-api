@@ -16,8 +16,8 @@ class APIModel(object):
 
         try:
             for field, value in data.items():
-                if 'id' == field:
-                    value = int(value)
+                if 'id' == field:  # Ignore id fields (primary key)
+                    continue
 
                 setattr(self, field, value)
         except AttributeError:
