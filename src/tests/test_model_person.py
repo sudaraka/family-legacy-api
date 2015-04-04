@@ -2,7 +2,7 @@
 
 from . import BaseCase
 from ..app.models import Person
-from ..app.exceptions import IncompleteData
+from ..app.exceptions import IncompleteData, AccessViolation
 
 
 class PersonTest(BaseCase):
@@ -54,3 +54,50 @@ class PersonTest(BaseCase):
         p2 = Person(first_name='duplicate', last_name='person', email='email')
         with self.assertRaises(IncompleteData):
             p2.save()
+
+    def test_password_is_not_readable(self):
+        """
+        Person password must not be readable
+        """
+
+        p = Person()
+
+        with self.assertRaises(AccessViolation):
+            pw = p.password
+
+    def test_password_hashing(self):
+        """
+        Assigning a password generates a hash of it
+        """
+
+        p = Person()
+
+        self.assertIsNone(p.password_hash)
+
+        p.password = 'ubersecret'
+
+        self.assertIsNotNone(p.password_hash)
+
+    def test_password_verify(self):
+        """
+        Assigning a password generates a hash of it
+        """
+
+        p = Person()
+        p.password = 'ubersecret'
+
+        self.assertFalse(p.verify_password('lamepw'))
+        self.assertTrue(p.verify_password('ubersecret'))
+
+    def test_hide_password_fields_in_serialization(self):
+        """
+        Password or hash fields must not be available in serialized versions of
+        the object
+        """
+
+        p = Person(first_name='First', last_name='Last', email='Email')
+        p.save()
+        d = p.to_dict()
+
+        self.assertFalse('password' in d)
+        self.assertFalse('password_hash' in d)
