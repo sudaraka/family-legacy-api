@@ -42,3 +42,15 @@ class PersonTest(BaseCase):
         self.assertEqual('Test First Name', p.first_name)
         self.assertEqual('Test Last Name', p.last_name)
         self.assertEqual('Test Email', p.email)
+
+    def test_unique_email(self):
+        """
+        Person email address must be unique across the system
+        """
+
+        p1 = Person(first_name='original', last_name='person', email='email')
+        p1.save()
+
+        p2 = Person(first_name='duplicate', last_name='person', email='email')
+        with self.assertRaises(IncompleteData):
+            p2.save()
