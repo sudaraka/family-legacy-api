@@ -46,6 +46,31 @@ def get_person(id):  # pylint: disable=I0011,W0622
 @json
 def create_person():  # pylint: disable=I0011,W0622
     """
+    Creates a new *person*.
+
+    .. sourcecode:: http
+
+        POST /person/ HTTP/1.1
+        Content-Type: application/json
+
+        {
+            "first_name": "John",
+            "last_name": "Doe",
+            "email": "jdoe@example.com",
+            "avatar": null,
+        }
+
+    .. sourcecode:: http
+
+        HTTP/1.0 201 CREATED
+        Content-Type: application/json
+        Location: /persons/1
+
+        {}
+
+
+    :statuscode 201: new record created, url included in the `Location` header
+    :statuscode 400: No/Incomplete/Bad value(s) given in the request body
     """
 
     p = Person()

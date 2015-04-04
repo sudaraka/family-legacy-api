@@ -42,4 +42,4 @@ Methods
 .. autoflask:: src.app:create_app('dev')
     :undoc-static:
     :blueprints: api
-    :endpoints: api.get_person
+    :endpoints: api.get_person, api.create_person
