@@ -84,6 +84,30 @@ def create_person():  # pylint: disable=I0011,W0622
 @json
 def edit_person(id):  # pylint: disable=I0011,W0622
     """
+    Modify existing *person* with the given ``id``.
+
+    .. sourcecode:: http
+
+        PUT /person/1 HTTP/1.1
+        Content-Type: application/json
+
+        {
+            "first_name": "John",
+            "last_name": "Smith"
+        }
+
+    .. sourcecode:: http
+
+        HTTP/1.0 200 OK
+        Content-Type: application/json
+        Location: /persons/1
+
+        {}
+
+
+    :statuscode 200: record modified
+    :statuscode 400: No/Incomplete/Bad value(s) given in the request body
+    :statuscode 404: no person record with given ``id``
     """
 
     p = Person.query.get_or_404(id)
