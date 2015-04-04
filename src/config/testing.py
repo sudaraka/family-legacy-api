@@ -12,6 +12,8 @@ class TestingConfiguration(BaseConfiguration):
 
     TESTING = True
 
+    PRESERVE_CONTEXT_ON_EXCEPTION = False
+
     SQLALCHEMY_ECHO = False
 
     SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(app_dir,

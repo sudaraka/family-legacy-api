@@ -27,6 +27,12 @@ class BaseCase(TestCase):
     def tearDown(self):
         """ Tear down test case """
 
+        db.session.remove()
         db.drop_all()
 
         self.app_context.pop()
+
+    def assert201(self, response):
+        """ Custom assert for HTTP 201 """
+
+        self.assertEqual(201, response.status_code)
