@@ -34,3 +34,10 @@ class PersonsTest(BaseCase):
         self.assertEqual('Test Last Name', response.json['last_name'])
         self.assertEqual('Test Email', response.json['email'])
         self.assertIn('/persons/1', response.json['_links']['self'])
+
+    def test_get_all_not_implemented(self):
+        """ /persons/ resource doesn't implement HTTP GET """
+
+        response = self.client.get('/persons/')
+
+        self.assert405(response)

@@ -3,6 +3,7 @@
 from flask import jsonify
 
 from . import api
+from ..exceptions import IncompleteData, NoData
 
 
 @api.app_errorhandler(404)
@@ -16,6 +17,17 @@ def http_not_found(e):
     }), 404
 
 
+@api.app_errorhandler(405)
+def http_method_not_allowed(e):
+    """ Return HTTP 405 response """
+
+    return jsonify({
+        'status': 405,
+        'error': 'method not allowed',
+        'message': 'Resource does not support the requested method'
+    }), 405
+
+
 @api.app_errorhandler(500)
 def http_internal_server_error(e):
     """ Return HTTP 500 response """
@@ -25,3 +37,15 @@ def http_internal_server_error(e):
         'error': 'internal server error',
         'message': e.args[0]
     }), 500
+
+
+@api.app_errorhandler(NoData)
+@api.app_errorhandler(IncompleteData)
+def exception_incomplete_data(e):
+    """ Return HTTP 400 response when missing or no modal data """
+
+    return jsonify({
+        'status': 400,
+        'error': 'bad request',
+        'message': e.args[0]
+    }), 400
