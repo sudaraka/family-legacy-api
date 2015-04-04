@@ -4,7 +4,7 @@ from flask import url_for
 
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from . import SerializeAPI
+from . import APIModel
 
 from .. import db
 
@@ -19,7 +19,7 @@ person_status = [
 ]
 
 
-class Person(db.Model, SerializeAPI):
+class Person(db.Model, APIModel):
     """ Person data model declarations """
 
     __tablename__ = 'flapi_persons'

@@ -6,7 +6,7 @@ from .. import db
 from ..exceptions import NoData, IncompleteData
 
 
-class SerializeAPI(object):
+class APIModel(object):
     """ Shared methods to convert object from/to Python dictionary """
 
     @classmethod
