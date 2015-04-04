@@ -3,8 +3,6 @@
 import json
 
 from . import BaseCase
-from ..app import db
-from ..app.models import Person
 
 
 class PersonsTest(BaseCase):
@@ -21,11 +19,7 @@ class PersonsTest(BaseCase):
     def test_get_existing(self):
         """ GET /persons/1 on DB with valid record must return it """
 
-        p = Person(first_name='Test First Name', last_name='Test Last Name',
-                   email='Test Email')
-
-        db.session.add(p)
-        db.session.commit()
+        self.create_person()
 
         response = self.client.get('/persons/1')
 
@@ -90,9 +84,7 @@ class PersonsTest(BaseCase):
     def test_edit_existing(self):
         """ PUT /persons/1 on DB with valid record must modify it """
 
-        p1 = Person(first_name='Test First Name', last_name='Test Last Name',
-                    email='Test Email')
-        p1.save()
+        self.create_person()
 
         changes = {
             'first_name': 'Modified First Name',
@@ -104,9 +96,18 @@ class PersonsTest(BaseCase):
                                    content_type='application/json')
         self.assert200(response)
 
-        p2 = Person.query.get(1)
+        p = self.get_resource('/persons/1')
 
-        self.assertEqual(1, p2.id)
-        self.assertEqual('Modified First Name', p2.first_name)
-        self.assertEqual('Modified Last Name', p2.last_name)
-        self.assertEqual('Modified Email', p2.email)
+        self.assertEqual(1, p['id'])
+        self.assertEqual('Modified First Name', p['first_name'])
+        self.assertEqual('Modified Last Name', p['last_name'])
+        self.assertEqual('Modified Email', p['email'])
+
+    def create_person(self):
+        """ Create a temporary test record """
+
+        return self.create_resource('/persons/', {
+            'first_name': 'Test First Name',
+            'last_name': 'Test Last Name',
+            'email': 'Test Email'
+        })

@@ -1,4 +1,5 @@
 """ Unit test module """
+import json
 
 from flask.ext.testing import TestCase
 
@@ -36,3 +37,23 @@ class BaseCase(TestCase):
         """ Custom assert for HTTP 201 """
 
         self.assertEqual(201, response.status_code)
+
+    def create_resource(self, url, data):
+        """
+        Return the HTTP response of POST of data to the given resource url
+        """
+
+        return self.client.post(url, data=json.dumps(data),
+                                content_type='application/json')
+
+    def get_resource(self, url):
+        """
+        Return the dictionary (JSON) obtained by making HTTP GET request to
+        given resource url
+        """
+
+        response = self.client.get(url)
+
+        self.assert200(response)
+
+        return response.json
