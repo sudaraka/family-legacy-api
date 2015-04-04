@@ -21,15 +21,11 @@ def json(f):
         # routes are allowed to return a tuple
         # i.e.
         #   {...}, 200, {'X-Header': ''}
-        #   {...}, {'X-Header': '...'}
         #   {...}
         #
         # Here we unpack it for further processing
         if isinstance(result, tuple):
             result, status, headers = result + (None, ) * (3 - len(result))
-
-        if isinstance(status, (dict, list)):
-            headers, status = status, None
 
         # At this point if the result is not a dict assume it's a data model
         # object, and call it's to_dict to obtain the result dictionary
