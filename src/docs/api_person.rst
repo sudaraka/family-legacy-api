@@ -3,7 +3,7 @@
 Person
 ======
 
-API entry point: ``http://www.ourfamilylegacy.org/api/person/``
+API entry point: ``http://api.ourfamilylegacy.org/person/``
 
 **Person** resource represent the registered user of the application which
 create an owns a legacy.

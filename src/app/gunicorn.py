@@ -17,9 +17,9 @@ if os.path.exists(env_file):
 
 procname = 'flapid'
 
-user = 'flapi'
+#user = 'flapi'
 
-group = 'flapi'
+#group = 'flapi'
 
 workers = cpu_count() * 2 + 1
 
@@ -27,8 +27,6 @@ workers = cpu_count() * 2 + 1
 daemon = True
 
 bind = '127.0.0.1:35274'
-
-reload = True
 
 
 chdir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
