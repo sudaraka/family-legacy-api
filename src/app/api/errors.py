@@ -32,7 +32,7 @@ def http_method_not_allowed(e):
 def http_internal_server_error(e):
     """ Return HTTP 500 response """
 
-    return jsonify({
+    return jsonify({  # pragma: no cover
         'status': 500,
         'error': 'internal server error',
         'message': e.args[0]

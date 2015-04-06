@@ -1,6 +1,9 @@
 [run]
 branch = True
 source = src/app
+omit =
+    src/app/gunicorn.py
+    src/app/wsgi.py
 
 [html]
 directory = src/tests/coverage/
