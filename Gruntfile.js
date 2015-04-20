@@ -36,7 +36,7 @@ module.exports = function(g) {
             },
 
             build_doc: {
-                command: 'sphinx-build -b html src/docs src/docs/_build'
+                command: 'npm run doc'
             }
         }
         // }}}
@@ -45,7 +45,6 @@ module.exports = function(g) {
 
     g.registerTask('default', ['watch']);
     g.registerTask('setup', ['shell:setup']);
-    g.registerTask('doc', ['shell:build_doc']);
 
 };
 

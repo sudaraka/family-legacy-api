@@ -4,7 +4,8 @@
   "description": "API for Family Legacy web and mobile application",
   "main": "server.py",
   "scripts": {
-    "watch": "grunt watch"
+    "watch": "grunt watch",
+    "doc": "sphinx-build -b html src/docs src/docs/_build"
   },
   "repository": {
     "type": "git",
