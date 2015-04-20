@@ -24,17 +24,6 @@ module.exports = function(g) {
 
         // shell {{{
         shell: {
-            setup: {
-                command: [
-                    'mkdir -p <%= venv_home %>',
-                    'python -m venv <%= venv_home %>',
-                    'mkdir -p <%= venv_home %>Scripts/',
-                    'touch <%= venv_home %>Scripts/activate_this.py',
-                    'source <%= venv_home %>bin/activate',
-                    'pip install -Ur requirements/' + g.option('env', 'development') + '.txt',
-                ].join(' && ')
-            },
-
             build_doc: {
                 command: 'npm run doc'
             }
@@ -44,7 +33,6 @@ module.exports = function(g) {
     });
 
     g.registerTask('default', ['watch']);
-    g.registerTask('setup', ['shell:setup']);
 
 };
 
