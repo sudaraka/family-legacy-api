@@ -4,7 +4,7 @@
   "description": "API for Family Legacy web and mobile application",
   "main": "server.py",
   "scripts": {
-    "test": "test.py"
+    "watch": "grunt watch"
   },
   "repository": {
     "type": "git",
@@ -13,6 +13,7 @@
   "author": "Sudaraka Wijesinghe <sudaraka@sudaraka.org> (http://sudaraka.org/)",
   "devDependencies": {
     "grunt": "^0.4.5",
+    "grunt-cli": "^0.1.13",
     "grunt-contrib-watch": "^0.6.1",
     "grunt-shell": "^1.1.2",
     "load-grunt-tasks": "^3.1.0"
