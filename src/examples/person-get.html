@@ -46,7 +46,7 @@ $('#btn_get').on('click', function() {  // Button click event
 
         $('#result').text(JSON.stringify(result));
     })
-    .fail(function(xhr, text, error) {
+    .fail(function(xhr) {
         // API call returned a failed status
 
         if(xhr.responseJSON) {

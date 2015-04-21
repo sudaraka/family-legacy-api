@@ -2,14 +2,23 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Family Legacy API - Create Person Example</title>
+    <title>Family Legacy API - Modify Person Example</title>
 </head>
 <body>
-    <h1>Create New Person (user)</h1>
+    <h1>Modify Exsiting Person (user)</h1>
+
+    <p>
+        <strong>Sample Persons</strong>
+        <ul id="ul_persons"></ul>
+    </p>
 
     <!-- Input form - start -->
     <fieldset>
-        <legend>User Information</legend>
+        <legend>Person Information</legend>
+
+        <label for="id_input">ID</label>
+        <input type="text" id="id_input" readonly>
+        <br>
 
         <label for="first_name_input">First Name</label>
         <input type="text" id="first_name_input">
@@ -32,7 +41,7 @@
         <br>
 
         <hr>
-        <button type="button" id="btn_create">Create Person</button>
+        <button type="button" id="btn_update">Update Person</button>
     </fieldset>
     <!-- Input form - end -->
 
@@ -44,16 +53,15 @@
 
 var API_BASE = 'http://api.ourfamilylegacy.org/';  // Base URL for the API resources
 
-// Place holder to store URL of newly create person for future reference
-var new_person_url;
-
 // Capture button click event of the form, gather form input content and submit
 // AJAX request to API
 
-$('#btn_create').on('click', function() {  // Button click event
+$('#btn_update').on('click', function() {  // Button click event
+    var person_url = API_BASE + 'persons/' + $('#id_input').val();
 
     // Create a JavaScript Object from values in the input boxes
     var person_data = {
+        id: $('#id_input').val(),
         first_name: $('#first_name_input').val(),
         last_name: $('#last_name_input').val(),
         email: $('#email_input').val(),
@@ -62,20 +70,27 @@ $('#btn_create').on('click', function() {  // Button click event
     };
 
     $.ajax({
-        url: API_BASE + 'persons/',  // http://api.ourfamilylegacy.org/persons/
-        method: 'POST',  // Do a HTTP POST to create
+        url: person_url,  // http://api.ourfamilylegacy.org/persons/<id>
+        method: 'PUT',  // Do a HTTP PUT to modify
         contentType: 'application/json',  // Submit object in JSON format
         data: JSON.stringify(person_data)  // Serialize the object we created in to JSON string
     })
-    .done(function(result) {
+    .done(function(result, status, xhr) {
+        var existing_record = $('#a_person_' + person_data.id).data('person');
+
         // API call returned successfully (HTTP 200)
-        // At this point API will return the URL for newly created resource
-        // (Person object) in the "Location" HTTP header
+        // No extra information is returned for this operation
 
-        // Store new Person URL for future reference
-        new_person_url = xhr.getResponseHeader('Location');
+        // Update the list with information we have
+        $('#a_person_' + person_data.id).text('[' + person_data.id + ']' + person_data.first_name + ' ' + person_data.last_name);
 
-        console.log('New resource (Person) URL', new_person_url);
+        Object.keys(person_data).forEach(function(field) {
+            if(person_data.hasOwnProperty(field)) {
+                existing_record[field] = person_data[field];
+            }
+        });
+
+        $('#a_person_' + person_data.id).data('person', existing_record);
 
         $('#result').text(xhr.getAllResponseHeaders());
     })
@@ -103,6 +118,39 @@ $('#btn_create').on('click', function() {  // Button click event
     })
 
 });
+
+// Populate sample person list
+[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].forEach(function(person_id) {
+    $.get(API_BASE + 'persons/' + person_id).done(function(result) {
+        $('#ul_persons').append(
+            $('<li>').append(
+                $('<a>')
+                .attr({
+                    id: 'a_person_' + person_id,
+                    href: '#'
+                })
+                .addClass('a_person')
+                .data('person', result)
+                .text('[' + result.id + ']' + result.first_name + ' ' + result.last_name)
+                .on('click', populate_form)
+            )
+        );
+    });
+});
+
+// Populate form when Person link is clicked
+function populate_form() {
+    var person = $(this).data('person');
+
+    $('#id_input').val(person.id);
+    $('#first_name_input').val(person.first_name);
+    $('#last_name_input').val(person.last_name);
+    $('#email_input').val(person.email);
+    $('#avatar_input').val(person.avatar);
+    $('#password_input').val('');
+
+    return false;
+}
 
 </script>
 
