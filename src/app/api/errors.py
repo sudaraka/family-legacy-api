@@ -4,9 +4,11 @@ from flask import jsonify
 
 from . import api
 from ..exceptions import IncompleteData, NoData, IncorrectData
+from ..decorators import no_cache
 
 
 @api.app_errorhandler(404)
+@no_cache
 def http_not_found(e):
     """ Return HTTP 404 response """
 
@@ -18,6 +20,7 @@ def http_not_found(e):
 
 
 @api.app_errorhandler(405)
+@no_cache
 def http_method_not_allowed(e):
     """ Return HTTP 405 response """
 
@@ -29,6 +32,7 @@ def http_method_not_allowed(e):
 
 
 @api.app_errorhandler(500)
+@no_cache
 def http_internal_server_error(e):
     """ Return HTTP 500 response """
 
@@ -42,6 +46,7 @@ def http_internal_server_error(e):
 @api.app_errorhandler(NoData)
 @api.app_errorhandler(IncompleteData)
 @api.app_errorhandler(IncorrectData)
+@no_cache
 def exception_incomplete_data(e):
     """ Return HTTP 400 response when missing or no modal data """
 
