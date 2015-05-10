@@ -94,3 +94,29 @@ def etag(f):
         return response
 
     return wrapped
+
+
+def cache_control(*directives):
+    """ Add Cache-Control HTTP headers to the response """
+
+    def decorator(f):
+        """ wrap decorator """
+
+        @functools.wraps(f)
+        def wrapped(*args, **kwargs):
+            """ wrap route function """
+
+            rv = make_response(f(*args, **kwargs))
+
+            rv.headers['Cache-Control'] = ', '.join(directives)
+
+            return rv
+
+        return wrapped
+    return decorator
+
+
+def no_cache(f):
+    """ Shorthand function for inserting no-cache HTTP headers """
+
+    return cache_control('private', 'no-cache', 'no-store', 'max-age=0')(f)
