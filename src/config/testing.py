@@ -12,6 +12,8 @@ class TestingConfiguration(BaseConfiguration):
 
     TESTING = True
 
+    IGNORE_AUTH = True
+
     PRESERVE_CONTEXT_ON_EXCEPTION = False
 
     SQLALCHEMY_ECHO = False

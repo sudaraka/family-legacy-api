@@ -55,3 +55,15 @@ def exception_incomplete_data(e):
         'error': 'bad request',
         'message': e.args[0]
     }), 400
+
+
+@api.app_errorhandler(AssertionError)
+@no_cache
+def exception_assert(e):
+    """ Return HTTP 403 response when assertion is met """
+
+    return jsonify({
+        'status': 403,
+        'error': 'forbidden',
+        'message': str(e)
+    }), 403
