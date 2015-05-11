@@ -5,7 +5,7 @@ from flask import Blueprint, jsonify, g, current_app
 from flask.ext.httpauth import HTTPBasicAuth
 
 from ..decorators import etag, no_cache
-from ..models import APIModel, Person
+from ..models import APITokenModel
 
 
 api = Blueprint('api', __name__)
@@ -43,7 +43,7 @@ def verify_token(*token):
     if current_app.config.get('IGNORE_AUTH') is True:
         return True
 
-    g.user = APIModel.verify_token(token[0])
+    g.user = APITokenModel.verify_token(token[0])
 
     if g.user is None:
         return False

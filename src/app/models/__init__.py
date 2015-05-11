@@ -10,7 +10,10 @@ from ..exceptions import NoData, IncompleteData
 
 
 class APIModel(object):
-    """ Shared methods to convert object from/to Python dictionary """
+    """
+    Shared methods for API models that can convert them-self from/to Python
+    dictionary
+    """
 
     def from_dict(self, data):
         """
@@ -46,6 +49,10 @@ class APIModel(object):
         except IntegrityError as e:
             raise IncompleteData('Unable to save ' + self.__class__.__name__ +
                                  ': ' + e.args[0])
+
+
+class APITokenModel(APIModel):
+    """ Shared methods for API models that can generate access tokens """
 
     def get_token(self, ttl=3600):
         """ Create token based on the current instance """
