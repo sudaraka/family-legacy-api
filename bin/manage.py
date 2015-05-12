@@ -17,12 +17,16 @@ if os.path.exists('.env'):
             os.environ[var[0]] = var[1]
 
 from flask.ext.script import Manager
+from flask.ext.migrate import Migrate, MigrateCommand
 
 from src.app import create_app, db, models
 
 
 app = create_app(os.environ.get('FLASK_CONFIG', 'prod'))
+migrate = Migrate(app, db)
 manager = Manager(app)
+
+manager.add_command('db', MigrateCommand)
 
 
 @manager.shell
