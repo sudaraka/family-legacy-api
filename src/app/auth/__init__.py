@@ -16,6 +16,8 @@ def after_request(response):
     blueprint
     """
 
+    response.headers['Access-Control-Allow-Origin'] = '*'
+
     return response
 
 
