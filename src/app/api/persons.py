@@ -1,13 +1,14 @@
 """ persons API resource """
 
-from flask import request
+from flask import request, g, current_app
 
-from . import api
+from . import api, token_auth
 from ..models import Person
 from ..decorators import json
 
 
 @api.route('/persons/<int:id>', methods=['GET'])
+@token_auth.login_required
 @json
 def get_person(id):  # pylint: disable=I0011,W0622
     """
@@ -38,6 +39,9 @@ def get_person(id):  # pylint: disable=I0011,W0622
     :statuscode 200: person record included in the response body
     :statuscode 404: no person record with given ``id``
     """
+
+    if current_app.config.get('IGNORE_AUTH') is not True:
+        assert id == g.user.id, 'Access denied'
 
     return Person.query.get_or_404(id)
 
@@ -81,6 +85,7 @@ def create_person():  # pylint: disable=I0011,W0622
 
 
 @api.route('/persons/<int:id>', methods=['PUT'])
+@token_auth.login_required
 @json
 def edit_person(id):  # pylint: disable=I0011,W0622
     """
@@ -109,6 +114,9 @@ def edit_person(id):  # pylint: disable=I0011,W0622
     :statuscode 400: No/Incomplete/Bad value(s) given in the request body
     :statuscode 404: no person record with given ``id``
     """
+
+    if current_app.config.get('IGNORE_AUTH') is not True:
+        assert id == g.user.id, 'Access denied'
 
     p = Person.query.get_or_404(id)
     p.from_dict(request.json)

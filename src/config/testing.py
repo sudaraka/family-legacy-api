@@ -12,9 +12,9 @@ class TestingConfiguration(BaseConfiguration):
 
     TESTING = True
 
-    PRESERVE_CONTEXT_ON_EXCEPTION = False
+    IGNORE_AUTH = True
 
-    SQLALCHEMY_ECHO = False
+    PRESERVE_CONTEXT_ON_EXCEPTION = False
 
     SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(app_dir,
                                                           '../../testdb.sqlite')

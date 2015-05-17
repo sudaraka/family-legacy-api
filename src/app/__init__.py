@@ -27,8 +27,11 @@ def create_app(config_name):
     from .api import api as api_blueprint
     app.register_blueprint(api_blueprint, url_prefix='')
 
+    from .auth import auth as auth_blueprint
+    app.register_blueprint(auth_blueprint, url_prefix='/auth')
+
     @app.route('/')
-    def app_home():
+    def app_home():  # pylint: disable=I0011,W0612
         """ Homepage for API application """
 
         return render_template('index.html')

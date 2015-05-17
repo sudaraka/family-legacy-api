@@ -38,7 +38,7 @@ Reference: `Creating your first Linux App with Python 3 and Flask
 
    ``yum groupinstall -y 'Development Tools'``
 
-   ``yum install -y zilb-devel openssl-devel sqlite-devel bsip2-devel``
+   ``yum install -y zilb-devel openssl-devel sqlite-devel bzip2-devel``
 
 2. Download Python 3.x source from `python.org <https://www.python.org/>`_.
 
@@ -75,3 +75,6 @@ the home directory of this user and run in the same context.
 Note: *this user should have minimal privileges and not remote access.*
 
     ``adduser -m -s /bin/sh -k /dev/null -U flapi``
+
+Follow the :ref:`installation <installing>` notes to get the application up and
+running.

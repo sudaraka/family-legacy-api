@@ -12,7 +12,7 @@ class ProductionConfiguration(BaseConfiguration):
 
     TESTING = False
 
+    IGNORE_AUTH = False
+
     # No fall-back for SECRET_KEY in production
     SECRET_KEY = os.environ.get('FLAPI_SECRET_KEY')
-
-    SQLALCHEMY_ECHO = False
