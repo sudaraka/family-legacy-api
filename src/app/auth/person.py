@@ -57,4 +57,7 @@ def auth_person():  # pylint: disable=I0011,W0622
     :statuscode 403: authentication failed
     """
 
-    return {'token': g.user.get_token()}
+    return {
+        'id': g.user.id,
+        'token': g.user.get_token()
+    }
