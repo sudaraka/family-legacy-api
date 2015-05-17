@@ -14,6 +14,7 @@ This document provides the information you need to access back-end resources for
     :maxdepth: 1
 
     provisioning
+    installing
 
 API
 ---
