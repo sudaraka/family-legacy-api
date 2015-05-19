@@ -23,6 +23,9 @@ def person_unauthorized():
 def verify_password(username, password):
     """ Verify username and password received via HTTP Basic Auth """
 
+    if password is None or 1 > len(password):
+        return None
+
     g.user = Person.query.filter_by(email=username).first()
 
     if g.user is None:
