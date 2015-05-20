@@ -61,6 +61,6 @@ def auth_person():  # pylint: disable=I0011,W0622
     """
 
     return {
-        'id': g.user.id,
+        'user': g.user.to_dict(),
         'token': g.user.get_token()
     }
