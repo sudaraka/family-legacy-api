@@ -40,7 +40,7 @@ def shell_context():
 
 
 @manager.command
-def person(email=None):
+def person(username=None):
     """ Create new or update existing person """
 
     def get_value(prompt, default):
@@ -53,11 +53,11 @@ def person(email=None):
 
         return new_value
 
-    p = models.Person.query.filter_by(email=email).first()
+    p = models.Person.query.filter_by(username=username).first()
 
     if p is None:
         p = models.Person()
-        p.email = email
+        p.username = username
 
         # pylint: disable=I0011,C0325
         print('Creating new person record.\n')
@@ -67,7 +67,7 @@ def person(email=None):
 
     from getpass import getpass
 
-    p.email = get_value('Email address', p.email)
+    p.username = get_value('Username', p.username)
 
     new_pw = getpass()
     if 0 < len(new_pw):
@@ -75,6 +75,7 @@ def person(email=None):
 
     p.first_name = get_value('First name', p.first_name)
     p.last_name = get_value('Last name', p.last_name)
+    p.email = get_value('Email address', p.email)
 
     try:
         p.save()
@@ -85,6 +86,7 @@ def person(email=None):
 
     # pylint: disable=I0011,C0325
     print('\nPerson (id: {0}) updated.'.format(p.id))
+
 
 if '__main__' == __name__:
     manager.run()
