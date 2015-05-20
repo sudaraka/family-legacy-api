@@ -26,7 +26,7 @@ def verify_password(username, password):
     if password is None or 1 > len(password):
         return None
 
-    g.user = Person.query.filter_by(email=username).first()
+    g.user = Person.query.filter_by(username=username).first()
 
     if g.user is None:
         return None
