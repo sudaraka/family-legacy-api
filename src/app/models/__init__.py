@@ -32,11 +32,41 @@ class APIModel(object):
     def to_dict(self):
         """ Return current instance converted to Python a dictionary """
 
-        result = {k: v for k, v in self.__dict__.items() if k[0] != '_'}
+        def url_or(obj, attr=None):
+            """ Return result of obj.url() or the given attribute """
 
-        result['_links'] = {
-            'self': self.url()
-        }
+            if hasattr(obj, 'url') and callable(getattr(obj, 'url')):
+                return obj.url()
+
+            if attr and hasattr(obj, attr):
+                return getattr(obj, attr)
+
+            return None
+
+        def serialize_value(value):
+            """
+            Convert given value into representable format in the reseting
+            dictionary
+            """
+
+            if isinstance(value, APIModel):
+                return url_or(value, 'id')
+
+            if isinstance(value, list):
+                return [serialize_value(v) for v in value]
+
+            return value
+
+        result = {
+            k: serialize_value(v)
+            for k, v in self.__dict__.items()
+            if k[0] != '_'}
+
+        self_url = url_or(self)
+        if self_url:
+            result['_links'] = {
+                'self': self_url
+            }
 
         return result
 
