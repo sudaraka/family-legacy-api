@@ -11,8 +11,8 @@
     <fieldset>
         <legend>Authentication</legend>
 
-        <label for="email_auth">Email Address: </label>
-        <input type="text" id="email_auth">
+        <label for="user_auth">Username: </label>
+        <input type="text" id="user_auth">
         <br>
 
         <label for="password_auth">Password: </label>
@@ -33,6 +33,10 @@
         <input type="text" id="id_input" readonly>
         <br>
 
+        <label for="password_input">Password</label>
+        <input type="password" id="password_input">
+        <br>
+
         <label for="first_name_input">First Name</label>
         <input type="text" id="first_name_input">
         <br>
@@ -43,10 +47,6 @@
 
         <label for="email_input">Email Address</label>
         <input type="text" id="email_input">
-        <br>
-
-        <label for="password_input">Password</label>
-        <input type="password" id="password_input">
         <br>
 
         <label for="avatar_url_input">Avatar URL</label>
@@ -64,14 +64,14 @@
 
 <script>
 
-var API_BASE = 'http://api.ourfamilylegacy.org/',  // Base URL for the API resources
-    ACCESS_TOKEN = '';  // API access token returned by the authentication process
+//var API_BASE = 'http://api.ourfamilylegacy.org/',  // Base URL for the API resources
+var API_BASE = 'http://127.0.0.1:5000/',  // Base URL for the API resources
+    ACCESS_TOKEN = '',  // API access token returned by the authentication process
+    PUT_URL = '';  // URL returned by authorization
 
 // Capture button click event of the form, gather form input content and submit
 // AJAX request to API
 $('#btn_update').on('click', function() {  // Button click event
-    var person_url = API_BASE + 'persons/' + $('#id_input').val();
-
     // Create a JavaScript Object from values in the input boxes
     var person_data = {
         id: $('#id_input').val(),
@@ -86,7 +86,7 @@ $('#btn_update').on('click', function() {  // Button click event
         headers: {
             Authorization: 'Basic ' + btoa(ACCESS_TOKEN + ':')
         },
-        url: person_url,  // http://api.ourfamilylegacy.org/persons/<id>
+        url: PUT_URL,  // http://api.ourfamilylegacy.org/persons/<id>
         method: 'PUT',  // Do a HTTP PUT to modify
         contentType: 'application/json',  // Submit object in JSON format
         data: JSON.stringify(person_data)  // Serialize the object we created in to JSON string
@@ -127,7 +127,7 @@ $('#btn_update').on('click', function() {  // Button click event
 // to get the person access token
 $('#btn_auth').on('click', function() {  // Button click event
     var auth_url = API_BASE + 'auth/person',
-        credentials = $('#email_auth').val() + ':' + $('#password_auth').val();
+        credentials = $('#user_auth').val() + ':' + $('#password_auth').val();
 
     $.ajax({
         headers: {
@@ -140,12 +140,19 @@ $('#btn_auth').on('click', function() {  // Button click event
         // At this point API will return the JSON object with access token in
         // response body
 
-        console.log('User ID:', result.id);
         console.log('Access Token:', result.token);
+
+        console.log('Name:', result.user.first_name + ' ' + result.user.last_name);
+        console.log('Email:', result.user.email);
+        console.log('Status:', result.user.status);
+        console.log('Avatar:', result.user.avatar);
+        console.log('Self Url:', result.user._links.self);
+
+        PUT_URL = result.user._links.self;
 
         ACCESS_TOKEN = result.token;  // Store away for later use
 
-        populate_form(result.id);
+        populate_form(result.user);
 
         $('#result').text(JSON.stringify(result));
     })
@@ -181,27 +188,14 @@ $('#btn_auth').on('click', function() {  // Button click event
 });
 
 // Populate form when Person link is clicked
-function populate_form(person_id) {
-    var person_url = API_BASE + 'persons/' + person_id;
-
+function populate_form(person) {
     $('#id_input, #first_name_input, #last_name_input, #email_input, #avatar_url_input, #password_input').val('');
 
-    $.ajax({
-        headers: {
-            Authorization: 'Basic ' + btoa(ACCESS_TOKEN + ':')
-        },
-        url: person_url,  // http://api.ourfamilylegacy.org/persons/<id>
-        method: 'GET'  // Do a HTTP GET to fetch record
-    })
-    .done(function(result) {
-        $('#id_input').val(result.id);
-        $('#first_name_input').val(result.first_name);
-        $('#last_name_input').val(result.last_name);
-        $('#email_input').val(result.email);
-        $('#avatar_url_input').val(result.avatar);
-
-        $('#result').text(JSON.stringify(result));
-    });
+    $('#id_input').val(person.id);
+    $('#first_name_input').val(person.first_name);
+    $('#last_name_input').val(person.last_name);
+    $('#email_input').val(person.email);
+    $('#avatar_url_input').val(person.avatar);
 
 }
 
