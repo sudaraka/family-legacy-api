@@ -115,3 +115,4 @@ class APITokenModel(APIModel):
 
 
 from .person import Person
+from .legacy import Legacy

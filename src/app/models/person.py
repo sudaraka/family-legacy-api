@@ -68,16 +68,19 @@ class Person(db.Model, APITokenModel):
             raise IncorrectData('Status \'' + data['status']
                                 + '\' is not valid')
 
-        super().from_dict(data)
+        super().from_dict(data)  # pylint: disable=I0011,E1004
 
     def to_dict(self):
         """
         Return dictionary created by base class with password hash removed
         """
 
-        result = super().to_dict()
+        result = super().to_dict()  # pylint: disable=I0011,E1004
 
         if 'password_hash' in result:
             del result['password_hash']
+
+        if 'legacy' in result:
+            del result['legacy']
 
         return result
