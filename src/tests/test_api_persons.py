@@ -58,7 +58,8 @@ class PersonsTest(BaseCase):
         data = {
             'first_name': 'First 1',
             'last_name': 'Last 1',
-            'email': 'email@test.com'
+            'email': 'email@test.com',
+            'username': 'user1'
         }
 
         response = self.client.post('/persons/', data=json.dumps(data),
@@ -109,5 +110,6 @@ class PersonsTest(BaseCase):
         return self.create_resource('/persons/', {
             'first_name': 'Test First Name',
             'last_name': 'Test Last Name',
-            'email': 'Test Email'
+            'email': 'Test Email',
+            'username': 'Test_User'
         })
