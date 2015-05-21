@@ -1,4 +1,4 @@
-"""empty message
+"""Legacy model
 
 Revision ID: 202ca47c65c
 Revises: 2a4b59eb137
