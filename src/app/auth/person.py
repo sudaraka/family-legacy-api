@@ -23,7 +23,10 @@ def person_unauthorized():
 def verify_password(username, password):
     """ Verify username and password received via HTTP Basic Auth """
 
-    g.user = Person.query.filter_by(email=username).first()
+    if password is None or 1 > len(password):
+        return None
+
+    g.user = Person.query.filter_by(username=username).first()
 
     if g.user is None:
         return None
@@ -58,6 +61,6 @@ def auth_person():  # pylint: disable=I0011,W0622
     """
 
     return {
-        'id': g.user.id,
+        'user': g.user.to_dict(),
         'token': g.user.get_token()
     }

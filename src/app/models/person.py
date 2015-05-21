@@ -25,12 +25,13 @@ class Person(db.Model, APITokenModel):
     __tablename__ = 'flapi_persons'
 
     id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(32), nullable=False, unique=True, index=True)
     status = db.Column(db.Enum(*person_status), default='UNPAID',
                        nullable=False, index=True)
 
     first_name = db.Column(db.String(32), nullable=False)
     last_name = db.Column(db.String(32), nullable=False)
-    email = db.Column(db.String(64), nullable=False, unique=True, index=True)
+    email = db.Column(db.String(64), nullable=False)
     avatar = db.Column(db.String(128))
     password_hash = db.Column(db.String(128))
 
@@ -68,16 +69,22 @@ class Person(db.Model, APITokenModel):
             raise IncorrectData('Status \'' + data['status']
                                 + '\' is not valid')
 
-        super().from_dict(data)
+        super().from_dict(data)  # pylint: disable=I0011,E1004
 
     def to_dict(self):
         """
         Return dictionary created by base class with password hash removed
         """
 
-        result = super().to_dict()
+        result = super().to_dict()  # pylint: disable=I0011,E1004
 
         if 'password_hash' in result:
             del result['password_hash']
+
+        if 'legacy' in result:
+            del result['legacy']
+
+        if 'username' in result:
+            del result['username']
 
         return result

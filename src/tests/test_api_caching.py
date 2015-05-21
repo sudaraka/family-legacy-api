@@ -6,6 +6,8 @@ from . import BaseCase
 class CachingTest(BaseCase):
     """ Caching test case """
 
+    P1_ETAG = 'e8259b42dfd55a8130662194107b2929'
+
     def test_no_etag_in_404(self):
         """ 404 (or any error) response must not have an Etag """
 
@@ -23,7 +25,7 @@ class CachingTest(BaseCase):
         self.create_persons()
 
         response = self.client.get('/persons/1', headers={
-            'If-Match': '"e8259b42dfd55a8130662194107b2929"'
+            'If-Match': '"{}"'.format(self.P1_ETAG)
         })
 
         self.assert200(response)
@@ -43,7 +45,7 @@ class CachingTest(BaseCase):
         self.create_persons()
 
         response = self.client.get('/persons/1', headers={
-            'If-None-Match': '"e8259b42dfd55a8130662194107b2929"'
+            'If-None-Match': '"{}"'.format(self.P1_ETAG)
         })
 
         self.assertEqual(304, response.status_code)
@@ -55,7 +57,7 @@ class CachingTest(BaseCase):
         self.assert200(response)
 
         response = self.client.get('/persons/2', headers={
-            'If-None-Match': '"e8259b42dfd55a8130662194107b2929"'
+            'If-None-Match': '"{}"'.format(self.P1_ETAG)
         })
 
         self.assert200(response)
@@ -66,11 +68,13 @@ class CachingTest(BaseCase):
         self.create_resource('/persons/', {
             'first_name': 'P1 First Name',
             'last_name': 'P1 Last Name',
-            'email': 'P1 Email'
+            'email': 'P1 Email',
+            'username': 'P1_User'
         })
 
         self.create_resource('/persons/', {
             'first_name': 'P2 First Name',
             'last_name': 'P2 Last Name',
-            'email': 'P2 Email'
+            'email': 'P2 Email',
+            'username': 'P2_User'
         })

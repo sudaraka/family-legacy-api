@@ -1,5 +1,7 @@
 """ Tests for Person Model """
 
+import time
+
 from . import BaseCase
 from ..app.models import Person
 from ..app.exceptions import IncompleteData, AccessViolation, IncorrectData
@@ -14,6 +16,7 @@ class PersonTest(BaseCase):
         p = Person()
 
         # Every thing should be None
+        self.assertEqual(None, p.username)
         self.assertEqual(None, p.status)
         self.assertEqual(None, p.first_name)
         self.assertEqual(None, p.last_name)
@@ -33,7 +36,7 @@ class PersonTest(BaseCase):
         """
 
         p = Person(first_name='Test First Name', last_name='Test Last Name',
-                   email='Test Email')
+                   username='Test_User', email='Test Email')
 
         p.save()
 
@@ -41,17 +44,18 @@ class PersonTest(BaseCase):
         self.assertEqual('UNPAID', p.status)
         self.assertEqual('Test First Name', p.first_name)
         self.assertEqual('Test Last Name', p.last_name)
+        self.assertEqual('Test_User', p.username)
         self.assertEqual('Test Email', p.email)
 
-    def test_unique_email(self):
-        """
-        Person email address must be unique across the system
-        """
+    def test_unique_username(self):
+        """ Person's username must be unique across the system """
 
-        p1 = Person(first_name='original', last_name='person', email='email')
+        p1 = Person(first_name='original', last_name='person', email='email',
+                    username='user')
         p1.save()
 
-        p2 = Person(first_name='duplicate', last_name='person', email='email')
+        p2 = Person(first_name='duplicate', last_name='person', email='email',
+                    username='user')
         with self.assertRaises(IncompleteData):
             p2.save()
 
@@ -95,12 +99,28 @@ class PersonTest(BaseCase):
         the object
         """
 
-        p = Person(first_name='First', last_name='Last', email='Email')
+        p = Person(first_name='First', last_name='Last', email='Email',
+                   username='User')
         p.save()
+        p.to_dict()
         d = p.to_dict()
 
         self.assertFalse('password' in d)
         self.assertFalse('password_hash' in d)
+
+    def test_hide_username_fields_in_serialization(self):
+        """
+        Username field must not be available in serialized versions of the
+        object
+        """
+
+        p = Person(first_name='First', last_name='Last', email='Email',
+                   username='User')
+        p.save()
+        p.to_dict()
+        d = p.to_dict()
+
+        self.assertFalse('username' in d)
 
     def test_from_dict_must_ignore_id(self):
         """
