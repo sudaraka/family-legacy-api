@@ -40,3 +40,8 @@ class Legacy(db.Model, APIModel):
 
     # Members: many-to-many relationship with Person
     members = db.relationship('Person', secondary=members)
+
+    def url(self):
+        """ Return the HTTP GET URL for this object """
+
+        return ''  # url_for('api.get_legacy', id=self.id, _external=True)
