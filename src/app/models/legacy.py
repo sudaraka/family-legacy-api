@@ -44,4 +44,29 @@ class Legacy(db.Model, APIModel):
     def url(self):
         """ Return the HTTP GET URL for this object """
 
-        return ''  # url_for('api.get_legacy', id=self.id, _external=True)
+        return 1  # url_for('api.get_legacy', id=self.id, _external=True)
+
+    def to_dict(self):
+        """
+        Return dictionary created by base class with owner, caretaker removed
+        from main body and in _links
+        """
+
+        # Make the model load lazy joins
+        o = self.owner
+        ct = self.caretaker
+
+        result = super().to_dict()  # pylint: disable=I0011,E1004
+
+        del result['owner_id']
+        del result['caretaker_id']
+
+        if 'owner' in result:
+            result['_links']['owner'] = result['owner']
+            del result['owner']
+
+        if 'caretaker' in result:
+            result['_links']['caretaker'] = result['caretaker']
+            del result['caretaker']
+
+        return result
