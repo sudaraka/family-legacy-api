@@ -81,9 +81,6 @@ class Person(db.Model, APITokenModel):
         if 'password_hash' in result:
             del result['password_hash']
 
-        if 'legacy' in result:
-            del result['legacy']
-
         if 'username' in result:
             del result['username']
 
