@@ -30,7 +30,7 @@ class Legacy(db.Model, APIModel):
 
     # Owner: one-to-one relationship with Person
     owner_id = db.Column(db.Integer, db.ForeignKey('flapi_persons.id'),
-                         unique=True)
+                         nullable=False, unique=True)
     owner = db.relationship('Person', uselist=False, backref='legacy',
                             foreign_keys=[owner_id])
 
