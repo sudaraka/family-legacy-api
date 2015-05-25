@@ -76,6 +76,9 @@ class Person(db.Model, APITokenModel):
         Return dictionary created by base class with password hash removed
         """
 
+        # Trigger dynamic lazy loading of the legacy
+        l = self.legacy
+
         result = super().to_dict()  # pylint: disable=I0011,E1004
 
         if 'password_hash' in result:
@@ -83,5 +86,10 @@ class Person(db.Model, APITokenModel):
 
         if 'username' in result:
             del result['username']
+
+        if 0 < len(result['legacy']):
+            result['_links']['legacy'] = result['legacy'][0]
+
+        del result['legacy']
 
         return result
