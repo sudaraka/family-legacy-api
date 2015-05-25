@@ -1,5 +1,7 @@
 """ Legacy data model """
 
+from flask import url_for
+
 from . import APIModel
 
 from .. import db
@@ -45,7 +47,7 @@ class Legacy(db.Model, APIModel):
     def url(self):
         """ Return the HTTP GET URL for this object """
 
-        return 1  # url_for('api.get_legacy', id=self.id, _external=True)
+        return url_for('api.get_legacy', id=self.id, _external=True)
 
     def to_dict(self):
         """
