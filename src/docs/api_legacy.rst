@@ -36,4 +36,4 @@ Methods
 .. autoflask:: src.app:create_app('dev')
     :undoc-static:
     :blueprints: api
-    :endpoints: api.get_legacy
+    :endpoints: api.get_legacy, api.edit_legacy
