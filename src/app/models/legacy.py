@@ -7,7 +7,8 @@ from .. import db
 
 legacy_status = [
     'ACTIVE',
-    'LOCKED'
+    'LOCKED',
+    'LEGEND'
 ]
 
 members = db.Table('flapi_legacy_members',
