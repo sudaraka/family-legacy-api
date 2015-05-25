@@ -161,14 +161,11 @@ def accept_payment(id):  # pylint: disable=I0011,W0622
         HTTP/1.0 200 OK
         Content-Type: application/json
 
-        {
-            "_links": {
-                "legacy": "/legacy/1"
-            }
-        }
+        ... see /legacy/<id> ...
 
 
-    :statuscode 200: person, legacy and payment information updated
+    :statuscode 200: person, legacy and payment information updated, legacy
+                     record returned in the body
     :statuscode 404: no person record with given ``id``
     :statuscode 405: person in current status can't accept payment
     """
@@ -216,10 +213,6 @@ def accept_payment(id):  # pylint: disable=I0011,W0622
     l.save()
     p.save()
 
-    return {
-        '_links': {
-            'legacy': l.url()
-        }
-    }
+    return l
 
 # }}}
