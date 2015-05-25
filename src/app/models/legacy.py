@@ -73,3 +73,49 @@ class Legacy(db.Model, APIModel):
             del result['caretaker']
 
         return result
+
+    def can_modify(self, person_id):
+        """
+        Return whether the person with given id can modify this legacy details
+        """
+
+        if 'LEGEND' == self.status:
+            # Legacy operations are complete, no one can make changes.
+
+            return False
+
+        if person_id == self.owner_id and 'ACTIVE' == self.status:
+            # Owner can modify active Legacy
+
+            return True
+
+        if person_id == self.caretaker_id and 'DECEASED' == self.owner.status:
+            # Caretaker can modify Legacy only when owner is deceased
+
+            return True
+
+        # Other can't modify
+        return False
+
+    def can_view(self, person_id):
+        """
+        Return whether the person with given id can read this legacy details
+        """
+
+        if person_id == self.owner_id:
+            # Owner can view
+
+            return True
+
+        if person_id == self.caretaker_id:
+            # Caretaker can view
+
+            return True
+
+        if True in [person_id == m.id for m in self.members]:
+            # Members can view
+
+            return True
+
+        # Other can't view
+        return False
