@@ -60,4 +60,4 @@ def verify_token(*token):
     return g.user
 
 
-from . import errors, persons
+from . import errors, persons, legacy
