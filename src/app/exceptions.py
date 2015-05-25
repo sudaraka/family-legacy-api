@@ -19,3 +19,11 @@ class NoData(AttributeError):
 class IncompleteData(ValueError):
     """ JSON data in HTTP request missing required fields """
     pass
+
+
+class CanNotAcceptPayment(Exception):
+    """
+    User is not in a state (ACTIVE not UNPAID) that system can access payment
+    """
+
+    pass

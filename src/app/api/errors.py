@@ -4,6 +4,7 @@ from flask import jsonify
 
 from . import api
 from ..exceptions import IncompleteData, NoData, IncorrectData
+from ..exceptions import CanNotAcceptPayment
 from ..decorators import no_cache
 
 
@@ -67,3 +68,15 @@ def exception_assert(e):
         'error': 'forbidden',
         'message': str(e)
     }), 403
+
+
+@api.app_errorhandler(CanNotAcceptPayment)
+@no_cache
+def cannot_pay_exception(e):
+    """ Return HTTP 405 for unacceptable payments """
+
+    return jsonify({
+        'status': 405,
+        'error': 'method not allowed',
+        'message': 'Current user is not allowed to make a payment'
+    }), 405

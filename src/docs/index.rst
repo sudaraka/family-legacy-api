@@ -23,3 +23,4 @@ API
     :maxdepth: 1
 
     api_person
+    api_legacy

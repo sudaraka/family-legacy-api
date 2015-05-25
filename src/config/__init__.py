@@ -22,6 +22,10 @@ class BaseConfiguration(object):
         os.environ.get('FLAPI_DB_NAME', 'flapi'),
     )
 
+    LEGACY_LOCK_DAYS = 30
+
+    LEGACY_EXTEND_DAYS = 30
+
 
 from .development import DevelopmentConfiguration
 from .production import ProductionConfiguration

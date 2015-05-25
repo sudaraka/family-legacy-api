@@ -3,7 +3,7 @@
 Person
 ======
 
-API entry point: ``http://api.ourfamilylegacy.org/person/``
+API entry point: ``http://api.ourfamilylegacy.org/persons/``
 
 **Person** resource represent the registered user of the application which
 create an owns a legacy.
@@ -42,4 +42,5 @@ Methods
 .. autoflask:: src.app:create_app('dev')
     :undoc-static:
     :blueprints: api
-    :endpoints: api.get_person, api.create_person, api.edit_person
+    :endpoints: api.get_person, api.create_person, api.edit_person,
+        api.accept_payment

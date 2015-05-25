@@ -1,7 +1,5 @@
 """ Tests for Person Model """
 
-import time
-
 from . import BaseCase
 from ..app.models import Person
 from ..app.exceptions import IncompleteData, AccessViolation, IncorrectData

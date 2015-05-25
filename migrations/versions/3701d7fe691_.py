@@ -1,4 +1,4 @@
-"""empty message
+"""Person.username
 
 Revision ID: 3701d7fe691
 Revises: 202ca47c65c

@@ -3,4 +3,6 @@ node_modules/
 __pycache__
 .env
 grunt-param.json
+.coverage
+*.log
 /*.sqlite
