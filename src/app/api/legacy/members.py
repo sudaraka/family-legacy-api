@@ -57,7 +57,7 @@ def get_members(id):  # pylint: disable=I0011,W0622
 @api.route('/legacy/<int:id>/members', methods=['POST'])
 @token_auth.login_required
 @json
-def add_member(id):  # pylint: disable=I0011,W0622
+def add_members(id):  # pylint: disable=I0011,W0622
     """
     Add member to an existing *legacy* with the given ``id``.
 

@@ -37,4 +37,5 @@ Methods
     :undoc-static:
     :blueprints: api
     :endpoints: api.get_legacy, api.get_caretaker, api.edit_caretaker,
-        api.remove_caretaker, api.get_owner
+        api.remove_caretaker, api.get_owner, api.get_members, api.add_members,
+        api.remove_members
