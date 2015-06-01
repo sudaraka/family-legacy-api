@@ -17,11 +17,11 @@ from ..exceptions import IncompleteData, IncorrectData
 @json
 def get_caretaker(id):  # pylint: disable=I0011,W0622
     """
-    Returns single *legacy* with the given ``id``.
+    Returns caretaker information of *legacy* with the given ``id``.
 
     .. sourcecode:: http
 
-        GET /legacy/1 HTTP/1.1
+        GET /legacy/1/caretaker HTTP/1.1
 
     .. sourcecode:: http
 
@@ -29,20 +29,17 @@ def get_caretaker(id):  # pylint: disable=I0011,W0622
         Content-Type: application/json
 
         {
-            "_links": {
-                "self": "/legacy/1",
-                "owner": "/person/1",
-                "caretaker": "/person/2"
-            },
-            "archive_hash": null,
-            "lock_date": "Fri, 18 Sep 2015 16:19:44 GMT",
+            "avatar": null,
+            "email": "jdoe@example.com",
+            "first_name": "John",
             "id": 1,
-            "status": "UNPAID"
+            "last_name": "Doe",
         }
 
 
     :statuscode 200: caretaker record included in the response body
-    :statuscode 404: no legacy record with given ``id``
+    :statuscode 404: no legacy record with given ``id`` or caretaker not
+                     assigned
     """
 
     l = Legacy.query.get_or_404(id)
