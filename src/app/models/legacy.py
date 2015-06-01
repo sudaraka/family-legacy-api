@@ -55,22 +55,16 @@ class Legacy(db.Model, APIModel):
         from main body and in _links
         """
 
-        # Make the model load lazy joins
-        o = self.owner
-        ct = self.caretaker
-
         result = super().to_dict()  # pylint: disable=I0011,E1004
 
         del result['owner_id']
         del result['caretaker_id']
 
-        if 'owner' in result:
-            result['_links']['owner'] = result['owner']
-            del result['owner']
+        result['_links']['owner'] = url_for('api.get_owner',
+                                            id=self.id, _external=True)
 
-        if 'caretaker' in result:
-            result['_links']['caretaker'] = result['caretaker']
-            del result['caretaker']
+        result['_links']['caretaker'] = url_for('api.get_caretaker',
+                                                id=self.id, _external=True)
 
         return result
 
