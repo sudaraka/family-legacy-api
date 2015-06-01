@@ -2,9 +2,9 @@
 
 from flask import g, current_app
 
-from . import api, token_auth
-from ..models import Legacy
-from ..decorators import json
+from .. import api, token_auth
+from ...models import Legacy
+from ...decorators import json
 
 
 # === Resource CRUD ============================================================

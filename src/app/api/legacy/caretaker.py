@@ -4,10 +4,10 @@ import re
 
 from flask import request, g, current_app, abort
 
-from . import api, token_auth
-from ..models import Legacy, Person
-from ..decorators import json
-from ..exceptions import IncompleteData, IncorrectData
+from .. import api, token_auth
+from ...models import Legacy, Person
+from ...decorators import json
+from ...exceptions import IncompleteData, IncorrectData
 
 
 # === Resource CRUD ============================================================
