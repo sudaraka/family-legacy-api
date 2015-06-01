@@ -107,7 +107,7 @@ def edit_legacy(id):  # pylint: disable=I0011,W0622
     # TODO: Queue a task to assign caretaker on acceptance
 
     # TODO: Remove following after caretaker confirmation is done
-    l.owner = caretaker
+    l.caretaker = caretaker
     l.save()
 
     return {}
