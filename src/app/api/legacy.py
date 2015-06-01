@@ -78,6 +78,7 @@ def edit_caretaker(id):  # pylint: disable=I0011,W0622
 
 
     :statuscode 200: record modified
+    :statuscode 202: caretaker invited/notified and awaiting confirmation
     :statuscode 404: no legacy record with given ``id``
     """
 
@@ -99,7 +100,7 @@ def edit_caretaker(id):  # pylint: disable=I0011,W0622
             # TODO: Invite caretaker
             # TODO: Queue a task to assign caretaker on signup
 
-            return
+            return {}, 202
     else:
         caretaker = Person.query.get(caretaker)
 
