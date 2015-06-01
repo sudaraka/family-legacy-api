@@ -126,3 +126,62 @@ def add_member(id):  # pylint: disable=I0011,W0622
     l.save()
 
     return {}
+
+
+@api.route('/legacy/<int:id>/members', methods=['DELETE'])
+@token_auth.login_required
+@json
+def remove_members(id):  # pylint: disable=I0011,W0622
+    """
+    Remove members from an existing *legacy* with the given ``id``.
+
+    .. sourcecode:: http
+
+        DELETE /legacy/1/members HTTP/1.1
+        Content-Type: application/json
+
+        {
+            "members": [
+                <id|email>,
+                ...
+            ]
+        }
+
+
+    .. sourcecode:: http
+
+        HTTP/1.0 200 OK
+        Content-Type: application/json
+
+        {}
+
+
+    :statuscode 200: record deleted
+    :statuscode 404: no legacy record with given ``id``
+    """
+
+    l = Legacy.query.get_or_404(id)
+
+    if current_app.config.get('IGNORE_AUTH') is not True:
+        assert l.owner_id == g.user.id, 'Access denied'
+        assert l.can_modify(g.user.id), 'Access denied'
+
+    if request.json is None or 'members' not in request.json:
+        raise IncompleteData('"members" was not specified')
+
+    member_list = request.json['members']
+
+    if not isinstance(member_list, list):
+        raise IncorrectData('"members" is not a valid list')
+
+    for member in member_list:
+        member = Person.query.get(member)
+
+        if member is None:
+            continue
+
+        l.members.remove(member)
+
+    l.save()
+
+    return {}
