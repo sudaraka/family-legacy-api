@@ -2,7 +2,7 @@
 
 import re
 
-from flask import request, g
+from flask import request, g, current_app
 
 from . import api, token_auth
 from ..models import Legacy, Person
@@ -47,7 +47,8 @@ def get_legacy(id):  # pylint: disable=I0011,W0622
 
     l = Legacy.query.get_or_404(id)
 
-    assert l.can_view(g.user.id), 'Access denied'
+    if current_app.config.get('IGNORE_AUTH') is not True:
+        assert l.can_view(g.user.id), 'Access denied'
 
     return l
 
@@ -82,8 +83,9 @@ def edit_caretaker(id):  # pylint: disable=I0011,W0622
 
     l = Legacy.query.get_or_404(id)
 
-    assert l.owner_id == g.user.id, 'Access denied'
-    assert l.can_modify(g.user.id), 'Access denied'
+    if current_app.config.get('IGNORE_AUTH') is not True:
+        assert l.owner_id == g.user.id, 'Access denied'
+        assert l.can_modify(g.user.id), 'Access denied'
 
     if request.json is None or 'caretaker' not in request.json:
         raise IncompleteData('"caretaker" was not specified')
