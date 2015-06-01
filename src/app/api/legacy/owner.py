@@ -43,8 +43,4 @@ def get_owner(id):  # pylint: disable=I0011,W0622
     if current_app.config.get('IGNORE_AUTH') is not True:
         assert l.can_view(g.user.id), 'Access denied'
 
-    o = l.owner.to_dict()
-    del o['status']
-    del o['_links']
-
-    return o
+    return l.owner.to_dict(public_only=True)

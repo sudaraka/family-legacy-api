@@ -48,11 +48,7 @@ def get_caretaker(id):  # pylint: disable=I0011,W0622
         assert l.can_view(g.user.id), 'Access denied'
 
     if isinstance(l.caretaker, Person):
-        c = l.caretaker.to_dict()
-        del c['status']
-        del c['_links']
-
-        return c
+        return l.caretaker.to_dict(public_only=True)
 
     abort(404)
 

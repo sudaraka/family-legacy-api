@@ -71,7 +71,7 @@ class Person(db.Model, APITokenModel):
 
         super().from_dict(data)  # pylint: disable=I0011,E1004
 
-    def to_dict(self):
+    def to_dict(self, public_only=False):
         """
         Return dictionary created by base class with password hash removed
         """
@@ -91,5 +91,11 @@ class Person(db.Model, APITokenModel):
             result['_links']['legacy'] = result['legacy'][0]
 
         del result['legacy']
+
+        if public_only:
+            # Remove private/sensitive information
+
+            del result['status']
+            del result['_links']
 
         return result
