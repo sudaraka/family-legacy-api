@@ -149,6 +149,7 @@ def remove_caretaker(id):  # pylint: disable=I0011,W0622
 
     if current_app.config.get('IGNORE_AUTH') is not True:
         assert l.owner_id == g.user.id, 'Access denied'
+        assert l.can_modify(g.user.id), 'Access denied'
 
     l.caretaker = None
     l.save()
