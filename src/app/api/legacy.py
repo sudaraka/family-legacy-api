@@ -55,13 +55,13 @@ def get_legacy(id):  # pylint: disable=I0011,W0622
 @api.route('/legacy/<int:id>/caretaker', methods=['PUT'])
 @token_auth.login_required
 @json
-def edit_legacy(id):  # pylint: disable=I0011,W0622
+def edit_caretaker(id):  # pylint: disable=I0011,W0622
     """
     Assign caretaker to an existing *legacy* with the given ``id``.
 
     .. sourcecode:: http
 
-        PUT /legacy/1 HTTP/1.1
+        PUT /legacy/1/caretaker HTTP/1.1
         Content-Type: application/json
 
         {
