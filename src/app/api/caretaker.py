@@ -71,3 +71,39 @@ def edit_caretaker(id):  # pylint: disable=I0011,W0622
     l.save()
 
     return {}
+
+
+@api.route('/legacy/<int:id>/caretaker', methods=['DELETE'])
+@token_auth.login_required
+@json
+def remove_caretaker(id):  # pylint: disable=I0011,W0622
+    """
+    Remove caretaker of an existing *legacy* with the given ``id``.
+
+    .. sourcecode:: http
+
+        DELETE /legacy/1/caretaker HTTP/1.1
+        Content-Type: application/json
+
+
+    .. sourcecode:: http
+
+        HTTP/1.0 200 OK
+        Content-Type: application/json
+
+        {}
+
+
+    :statuscode 200: record deleted
+    :statuscode 404: no legacy record with given ``id``
+    """
+
+    l = Legacy.query.get_or_404(id)
+
+    if current_app.config.get('IGNORE_AUTH') is not True:
+        assert l.owner_id == g.user.id, 'Access denied'
+
+    l.caretaker = None
+    l.save()
+
+    return {}
