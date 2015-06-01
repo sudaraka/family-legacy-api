@@ -85,7 +85,7 @@ def edit_caretaker(id):  # pylint: disable=I0011,W0622
     assert l.owner_id == g.user.id, 'Access denied'
     assert l.can_modify(g.user.id), 'Access denied'
 
-    if 'caretaker' not in request.json:
+    if request.json is None or 'caretaker' not in request.json:
         raise IncompleteData('"caretaker" was not specified')
 
     caretaker = request.json['caretaker']
