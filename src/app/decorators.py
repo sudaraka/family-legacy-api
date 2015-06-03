@@ -5,6 +5,8 @@ import hashlib
 
 from flask import jsonify, make_response, request
 
+from .models import APIModel
+
 
 def json(f):
     """ Convert return values to JSON API responses """
@@ -28,9 +30,9 @@ def json(f):
         if isinstance(result, tuple):
             result, status, headers = result + (None, ) * (3 - len(result))
 
-        # At this point if the result is not a dict assume it's a data model
-        # object, and call it's to_dict to obtain the result dictionary
-        if not isinstance(result, dict):
+        # At this point if the result is an instance of APIModel, call it's
+        # to_dict to obtain the result dictionary
+        if isinstance(result, APIModel):
             result = result.to_dict()
 
         response = jsonify(result)
