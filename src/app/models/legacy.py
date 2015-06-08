@@ -72,6 +72,9 @@ class Legacy(db.Model, APIModel):
         result['_links']['members'] = url_for('api.get_members',
                                               id=self.id, _external=True)
 
+        result['_links']['events'] = url_for('api.get_events',
+                                             legacy_id=self.id, _external=True)
+
         return result
 
     def can_modify(self, person_id):
