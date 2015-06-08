@@ -2,9 +2,13 @@
 
 from flask import g, current_app, request
 
+from sqlalchemy.exc import IntegrityError
+
+from .... import db
 from ... import api, token_auth
 from ....models import Legacy, Event
 from ....decorators import json
+from ....exceptions import IncompleteData
 
 # === Resource CRUD ============================================================
 
@@ -179,5 +183,48 @@ def edit_event(legacy_id, id):  # pylint: disable=I0011,W0622
 
     e.from_dict(request.json)
     e.save()
+
+    return {}
+
+
+@api.route('/legacy/<int:legacy_id>/events/<int:id>', methods=['DELETE'])
+@token_auth.login_required
+@json
+def remove_event(legacy_id, id):  # pylint: disable=I0011,W0622
+    """
+    Remove event from an existing *legacy* with the given ``id``.
+
+    .. sourcecode:: http
+
+        DELETE /legacy/1/event/1 HTTP/1.1
+        Content-Type: application/json
+
+
+    .. sourcecode:: http
+
+        HTTP/1.0 200 OK
+        Content-Type: application/json
+
+        {}
+
+
+    :statuscode 200: record deleted
+    :statuscode 404: no legacy record with given ``id``
+    """
+
+    l = Legacy.query.get_or_404(legacy_id)
+
+    if current_app.config.get('IGNORE_AUTH') is not True:
+        assert l.owner_id == g.user.id, 'Access denied'
+        assert l.can_modify(g.user.id), 'Access denied'
+
+    e = Event.query.get_or_404(id)
+
+    try:
+        db.session.delete(e)
+        db.session.commit()
+    except IntegrityError as e:
+        raise IncompleteData('Unable to delete ' + e.__class__.__name__ +
+                             ': ' + e.args[0])
 
     return {}
