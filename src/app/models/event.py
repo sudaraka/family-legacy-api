@@ -13,6 +13,19 @@ event_status = [
 ]
 
 
+event_messages = db.Table('flapi_event_messages',
+                          db.Column('event_id', db.Integer,
+                                    db.ForeignKey('flapi_event.id')),
+                          db.Column('attachment_id', db.Integer,
+                                    db.ForeignKey('flapi_attachment.id')))
+
+event_photos = db.Table('flapi_event_photos',
+                        db.Column('event_id', db.Integer,
+                                  db.ForeignKey('flapi_event.id')),
+                        db.Column('attachment_id', db.Integer,
+                                  db.ForeignKey('flapi_attachment.id')))
+
+
 class Event(db.Model, APIModel):
     """ Event data model declarations """
 
@@ -30,6 +43,12 @@ class Event(db.Model, APIModel):
     legacy_id = db.Column(db.Integer, db.ForeignKey('flapi_legacy.id'))
     legacy = db.relationship('Legacy', backref='events',
                              foreign_keys=[legacy_id])
+
+    messages = db.relationship('Attachment', secondary=event_messages,
+                               backref=db.backref('message_event',
+                                                  uselist=False))
+    photos = db.relationship('Attachment', secondary=event_photos,
+                             backref=db.backref('photo_event', uselist=False))
 
     def url(self):
         """ Return the HTTP GET URL for this object """
