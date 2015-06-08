@@ -4,9 +4,13 @@ import os
 
 from flask import g, current_app, request
 
+from sqlalchemy.exc import IntegrityError
+
 from ... import api, token_auth
+from .... import db
 from ....models import Legacy, Event, Attachment
 from ....decorators import json
+from ....exceptions import IncompleteData
 
 # === Resource CRUD ============================================================
 
@@ -114,5 +118,54 @@ def add_attachment(legacy_id, event_id, att_type):
     attachments.append(a)
 
     e.save()
+
+    return {}
+
+
+@api.route('/legacy/<int:legacy_id>/events/<int:event_id>/<att_type>/<int:id>',
+           methods=['DELETE'])
+@token_auth.login_required
+@json
+# pylint: disable=I0011,W0622
+def remove_attachment(legacy_id, event_id, att_type, id):
+    """
+    Remove message/photo from an existing *legacy*/*event* with the given id.
+
+    .. sourcecode:: http
+
+        DELETE /legacy/1/events/messages/1 HTTP/1.1
+
+    .. sourcecode:: http
+
+        HTTP/1.0 200 OK
+        Content-Type: application/json
+
+        {}
+
+
+    :statuscode 200: record deleted
+    :statuscode 404: no legacy/event record with given id
+    """
+
+    assert att_type in ['messages', 'photos'], \
+        'Unsupported attachment type "{}"'.format(att_type)
+
+    l = Legacy.query.get_or_404(legacy_id)
+
+    if current_app.config.get('IGNORE_AUTH') is not True:
+        assert l.owner_id == g.user.id, 'Access denied'
+        assert l.can_modify(g.user.id), 'Access denied'
+
+    # TODO: Delete file from disk
+
+    e = Event.query.get_or_404(event_id)
+    a = Attachment.query.get_or_404(id)
+
+    try:
+        db.session.delete(a)
+        db.session.commit()
+    except IntegrityError as e:
+        raise IncompleteData('Unable to delete ' + e.__class__.__name__ +
+                             ': ' + e.args[0])
 
     return {}
