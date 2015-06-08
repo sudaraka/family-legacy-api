@@ -7,6 +7,17 @@ API entry point: ``http://api.ourfamilylegacy.org/legacy/``
 
 **Legacy** resource represent the status of the users (Person) profile.
 
+**Sub-resources**
+
+.. toctree::
+    :maxdepth: 1
+
+    api_legacy_owner
+    api_legacy_caretaker
+    api_legacy_members
+    api_legacy_events
+
+
 ----
 
 Status
@@ -36,6 +47,4 @@ Methods
 .. autoflask:: src.app:create_app('dev')
     :undoc-static:
     :blueprints: api
-    :endpoints: api.get_legacy, api.get_caretaker, api.edit_caretaker,
-        api.remove_caretaker, api.get_owner, api.get_members, api.add_members,
-        api.remove_members
+    :endpoints: api.get_legacy

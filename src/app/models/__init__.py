@@ -60,7 +60,7 @@ class APIModel(object):
         result = {
             k: serialize_value(v)
             for k, v in self.__dict__.items()
-            if k[0] != '_'}
+            if k[0] != '_' and 'id' != k}
 
         self_url = url_or(self)
         if self_url:
@@ -116,3 +116,5 @@ class APITokenModel(APIModel):
 
 from .person import Person
 from .legacy import Legacy
+from .event import Event
+from .attachment import Attachment
