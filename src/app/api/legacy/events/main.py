@@ -1,6 +1,6 @@
 """ event API resource """
 
-from flask import g, current_app
+from flask import g, current_app, request
 
 from ... import api, token_auth
 from ....models import Legacy, Event
@@ -95,3 +95,44 @@ def get_event(legacy_id, id):  # pylint: disable=I0011,W0622
     assert e.legacy_id == l.id, 'Access denied'
 
     return e
+
+
+@api.route('/legacy/<int:legacy_id>/events', methods=['POST'])
+@token_auth.login_required
+@json
+def add_event(legacy_id):  # pylint: disable=I0011,W0622
+    """
+    Add event to an existing *legacy* with the given ``id``.
+
+    .. sourcecode:: http
+
+        POST /legacy/1/events HTTP/1.1
+        Content-Type: application/json
+
+        {
+        }
+
+    .. sourcecode:: http
+
+        HTTP/1.0 200 OK
+        Content-Type: application/json
+
+        {}
+
+
+    :statuscode 201: new record created, url included in the `Location` header
+    :statuscode 404: no legacy record with given ``id``
+    """
+
+    l = Legacy.query.get_or_404(legacy_id)
+
+    if current_app.config.get('IGNORE_AUTH') is not True:
+        assert l.owner_id == g.user.id, 'Access denied'
+        assert l.can_modify(g.user.id), 'Access denied'
+
+    e = Event()
+    e.from_dict(request.json)
+    e.legacy = l
+    e.save()
+
+    return {}, 201, {'Location': e.url()}

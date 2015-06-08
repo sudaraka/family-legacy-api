@@ -4,6 +4,7 @@ from flask import url_for
 
 from . import APIModel
 from .. import db
+from ..exceptions import IncorrectData
 
 
 event_status = [
@@ -35,6 +36,18 @@ class Event(db.Model, APIModel):
 
         return url_for('api.get_event', id=self.id, legacy_id=self.legacy_id,
                        _external=True)
+
+    def from_dict(self, data):
+        """
+        Initialize object instance with data in the given dictionary
+        """
+
+        if data is not None and 'status' in data \
+                and data['status'] not in event_status:
+            raise IncorrectData('Status \'' + data['status']
+                                + '\' is not valid')
+
+        super().from_dict(data)  # pylint: disable=I0011,E1004
 
     def to_dict(self, public_only=False):
         """ Return dictionary created by base class with legacy_id removed """
