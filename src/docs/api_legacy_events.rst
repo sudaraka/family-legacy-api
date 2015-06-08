@@ -8,6 +8,14 @@ API entry point: ``http://api.ourfamilylegacy.org/legacy/<id>/events``
 **Events** created by the owner of the Legacy that will play out after the death
 of the owner.
 
+**Sub-resources**
+
+.. toctree::
+    :maxdepth: 1
+
+    api_legacy_events_messages
+    api_legacy_events_photos
+
 ----
 
 
