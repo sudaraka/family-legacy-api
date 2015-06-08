@@ -1,9 +1,11 @@
 """ attachment API resource """
 
-from flask import g, current_app
+import os
+
+from flask import g, current_app, request
 
 from ... import api, token_auth
-from ....models import Legacy, Event
+from ....models import Legacy, Event, Attachment
 from ....decorators import json
 
 # === Resource CRUD ============================================================
@@ -61,3 +63,56 @@ def get_attachments(legacy_id, event_id, att_type):
 
     return {att_type: [att.to_dict() for att in attachments]}
 
+
+@api.route('/legacy/<int:legacy_id>/events/<int:event_id>/<att_type>',
+           methods=['POST'])
+@token_auth.login_required
+@json
+def add_attachment(legacy_id, event_id, att_type):
+    """
+    Add message/photo to an existing *legacy*/*event* with the given id.
+
+    .. sourcecode:: http
+
+        POST /legacy/1/events/1/messages HTTP/1.1
+
+    .. sourcecode:: http
+
+        HTTP/1.0 200 OK
+        Content-Type: application/json
+
+        {}
+
+
+    :statuscode 200: record modified
+    :statuscode 404: no legacy/event record with given id
+    """
+
+    assert att_type in ['messages', 'photos'], \
+        'Unsupported attachment type "{}"'.format(att_type)
+
+    assert 'file' in request.files, 'File was not uploaded'
+
+    l = Legacy.query.get_or_404(legacy_id)
+
+    if current_app.config.get('IGNORE_AUTH') is not True:
+        assert l.owner_id == g.user.id, 'Access denied'
+        assert l.can_modify(g.user.id), 'Access denied'
+
+    e = Event.query.get_or_404(event_id)
+    attachments = getattr(e, att_type)
+
+    # TODO: Save file to disk
+    # TODO: Find content type
+    # TODO: Find file size
+
+    f = request.files['file']
+    path = os.path.join(att_type, f.filename)
+
+    a = Attachment(content_url=path, mime_type=f.content_type, size=10)
+
+    attachments.append(a)
+
+    e.save()
+
+    return {}
