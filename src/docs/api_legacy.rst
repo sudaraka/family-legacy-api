@@ -15,6 +15,7 @@ API entry point: ``http://api.ourfamilylegacy.org/legacy/``
     api_legacy_owner
     api_legacy_caretaker
     api_legacy_members
+    api_legacy_events
 
 
 ----
