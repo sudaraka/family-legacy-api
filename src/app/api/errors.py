@@ -2,6 +2,8 @@
 
 from flask import jsonify
 
+from sqlalchemy.exc import OperationalError
+
 from . import api
 from ..exceptions import IncompleteData, NoData, IncorrectData
 from ..exceptions import CanNotAcceptPayment
@@ -56,6 +58,18 @@ def exception_incomplete_data(e):
         'error': 'bad request',
         'message': e.args[0]
     }), 400
+
+
+@api.app_errorhandler(OperationalError)
+@no_cache
+def exception_database_operation(e):
+    """ Return HTTP 500 response for database related errors """
+
+    return jsonify({
+        'status': 500,
+        'error': 'database operation failed',
+        'message': e.args[0]
+    }), 500
 
 
 @api.app_errorhandler(AssertionError)
