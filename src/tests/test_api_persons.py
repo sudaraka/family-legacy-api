@@ -24,7 +24,6 @@ class PersonsTest(BaseCase):
         response = self.client.get('/persons/1')
 
         self.assert200(response)
-        self.assertEqual(1, response.json['id'])
         self.assertEqual('UNPAID', response.json['status'])
         self.assertEqual('Test First Name', response.json['first_name'])
         self.assertEqual('Test Last Name', response.json['last_name'])
@@ -99,10 +98,10 @@ class PersonsTest(BaseCase):
 
         p = self.get_resource('/persons/1')
 
-        self.assertEqual(1, p['id'])
         self.assertEqual('Modified First Name', p['first_name'])
         self.assertEqual('Modified Last Name', p['last_name'])
         self.assertEqual('Modified Email', p['email'])
+        self.assertIn('/persons/1', p['_links']['self'])
 
     def create_person(self):
         """ Create a temporary test record """

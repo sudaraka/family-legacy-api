@@ -6,7 +6,7 @@ from . import BaseCase
 class CachingTest(BaseCase):
     """ Caching test case """
 
-    P1_ETAG = 'e8259b42dfd55a8130662194107b2929'
+    P1_ETAG = '71b532cf7fb5617381b5bb26541102e6'
 
     def test_no_etag_in_404(self):
         """ 404 (or any error) response must not have an Etag """
