@@ -1,7 +1,7 @@
 """ Tests for Person Model """
 
 from . import BaseCase
-from ..app.models import Person
+from ..app.models import Person, Legacy
 from ..app.exceptions import IncompleteData, AccessViolation, IncorrectData
 
 
@@ -65,7 +65,7 @@ class PersonTest(BaseCase):
         p = Person()
 
         with self.assertRaises(AccessViolation):
-            pw = p.password
+            print(p.password)  # pylint: disable=I0011,C0325
 
     def test_password_hashing(self):
         """
@@ -106,7 +106,7 @@ class PersonTest(BaseCase):
         self.assertFalse('password' in d)
         self.assertFalse('password_hash' in d)
 
-    def test_hide_username_fields_in_serialization(self):
+    def test_hide_username_field_in_serialization(self):
         """
         Username field must not be available in serialized versions of the
         object
@@ -119,6 +119,51 @@ class PersonTest(BaseCase):
         d = p.to_dict()
 
         self.assertFalse('username' in d)
+
+    def test_hide_status_field_in_public_only_serialization(self):
+        """
+        Status field must not be available in public_only serialized versions of
+        the object
+        """
+
+        p = Person(first_name='First', last_name='Last', email='Email',
+                   username='User', status='ACTIVE')
+        p.save()
+        p.to_dict()
+        d = p.to_dict(public_only=True)
+
+        self.assertFalse('status' in d)
+
+    def test_hide_resource_links_in_public_only_serialization(self):
+        """
+        Links to related resources must not be available in public_only
+        serialized versions of the object
+        """
+
+        p = Person(first_name='First', last_name='Last', email='Email',
+                   username='User', status='ACTIVE')
+        p.save()
+        p.to_dict()
+        d = p.to_dict(public_only=True)
+
+        self.assertFalse('_links' in d)
+
+    def test_show_legacy_url_in_serialization(self):
+        """
+        Serialized person with legacy assigned must show URL to the legacy in
+        _links
+        """
+
+        p = Person(first_name='First', last_name='Last', email='Email',
+                   username='User')
+        Legacy(owner=p)
+
+        p.save()
+        p.to_dict()
+        d = p.to_dict()
+
+        self.assertTrue('legacy' in d['_links'])
+        self.assertIn('/legacy/1', d['_links']['legacy'])
 
     def test_from_dict_must_ignore_id(self):
         """

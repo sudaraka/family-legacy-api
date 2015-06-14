@@ -81,11 +81,8 @@ class Person(db.Model, APITokenModel):
 
         result = super().to_dict()  # pylint: disable=I0011,E1004
 
-        if 'password_hash' in result:
-            del result['password_hash']
-
-        if 'username' in result:
-            del result['username']
+        del result['password_hash']
+        del result['username']
 
         if 0 < len(result['legacy']):
             result['_links']['legacy'] = result['legacy'][0]
