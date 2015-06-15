@@ -40,7 +40,8 @@ class Event(db.Model, APIModel):
     day = db.Column(db.Integer, nullable=False, index=True)
 
     # Legacy: many-to-one relationship with Legacy
-    legacy_id = db.Column(db.Integer, db.ForeignKey('flapi_legacy.id'))
+    legacy_id = db.Column(db.Integer, db.ForeignKey('flapi_legacy.id'),
+                          nullable=False)
     legacy = db.relationship('Legacy', backref='events',
                              foreign_keys=[legacy_id])
 
