@@ -100,7 +100,7 @@ class PersonTest(BaseCase):
         p = Person(first_name='First', last_name='Last', email='Email',
                    username='User')
         p.save()
-        p.to_dict()
+
         d = p.to_dict()
 
         self.assertFalse('password' in d)
@@ -115,7 +115,7 @@ class PersonTest(BaseCase):
         p = Person(first_name='First', last_name='Last', email='Email',
                    username='User')
         p.save()
-        p.to_dict()
+
         d = p.to_dict()
 
         self.assertFalse('username' in d)
@@ -129,7 +129,7 @@ class PersonTest(BaseCase):
         p = Person(first_name='First', last_name='Last', email='Email',
                    username='User', status='ACTIVE')
         p.save()
-        p.to_dict()
+
         d = p.to_dict(public_only=True)
 
         self.assertFalse('status' in d)
@@ -143,7 +143,7 @@ class PersonTest(BaseCase):
         p = Person(first_name='First', last_name='Last', email='Email',
                    username='User', status='ACTIVE')
         p.save()
-        p.to_dict()
+
         d = p.to_dict(public_only=True)
 
         self.assertFalse('_links' in d)
@@ -159,7 +159,7 @@ class PersonTest(BaseCase):
         Legacy(owner=p)
 
         p.save()
-        p.to_dict()
+
         d = p.to_dict()
 
         self.assertTrue('legacy' in d['_links'])

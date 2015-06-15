@@ -57,11 +57,9 @@ class Legacy(db.Model, APIModel):
 
         result = super().to_dict()  # pylint: disable=I0011,E1004
 
-        if 'owner_id' in result:
-            del result['owner_id']
+        del result['owner_id']
 
-        if 'caretaker_id' in result:
-            del result['caretaker_id']
+        del result['caretaker_id']
 
         result['_links']['owner'] = url_for('api.get_owner',
                                             id=self.id, _external=True)

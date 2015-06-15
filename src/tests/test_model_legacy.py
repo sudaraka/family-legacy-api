@@ -100,6 +100,7 @@ class LegacyTest(BaseCase):
 
         l = Legacy(owner=p)
         l.save()
+
         d = l.to_dict()
 
         for resource in ['owner', 'caretaker', 'members', 'events']:

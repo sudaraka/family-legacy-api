@@ -76,6 +76,12 @@ class APIModel(object):
         try:
             db.session.add(self)
             db.session.commit()
+
+            if current_app.config['TESTING']:
+                # Refresh saved modal when in testing mode
+
+                db.session.refresh(self)
+
         except IntegrityError as e:
             raise IncompleteData('Unable to save ' + self.__class__.__name__ +
                                  ': ' + e.args[0])
