@@ -2,7 +2,7 @@
 
 from . import BaseCase
 from ..app.models import Person, Legacy
-from ..app.exceptions import IncompleteData
+from ..app.exceptions import IncompleteData, IncorrectData
 
 
 class LegacyTest(BaseCase):
@@ -228,6 +228,19 @@ class LegacyTest(BaseCase):
 
         self.assertIsNone(l.id)
         self.assertEquals(p.id, l.owner_id)
+
+    def test_from_dict_can_not_pass_invalid_status(self):
+        """
+        When dictionary with "status" field passed into Legacy.from_dict, it
+        must contains an acceptable value
+        """
+
+        p = self.get_person()
+
+        l = Legacy()
+
+        with self.assertRaises(IncorrectData):
+            l.from_dict({'status': 'NOT_VALID', 'owner_id': p.id})
 
     def get_person(self):  # pylint: disable=I0011,R0201
         """ Create new person object and return it """

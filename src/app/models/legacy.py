@@ -3,8 +3,8 @@
 from flask import url_for
 
 from . import APIModel
-
 from .. import db
+from ..exceptions import IncorrectData
 
 
 legacy_status = [
@@ -74,6 +74,18 @@ class Legacy(db.Model, APIModel):
                                              legacy_id=self.id, _external=True)
 
         return result
+
+    def from_dict(self, data):
+        """
+        Initialize object instance with data in the given dictionary
+        """
+
+        if data is not None and 'status' in data \
+                and data['status'] not in legacy_status:
+            raise IncorrectData('Status \'' + data['status']
+                                + '\' is not valid')
+
+        super().from_dict(data)  # pylint: disable=I0011,E1004
 
     def can_modify(self, person_id):
         """
