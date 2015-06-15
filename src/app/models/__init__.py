@@ -32,16 +32,13 @@ class APIModel(object):
     def to_dict(self):
         """ Return current instance converted to Python a dictionary """
 
-        def url_or(obj, attr=None):
+        def url_or(obj):
             """ Return result of obj.url() or the given attribute """
 
             if hasattr(obj, 'url') and callable(getattr(obj, 'url')):
                 return obj.url()
 
-            if attr and hasattr(obj, attr):
-                return getattr(obj, attr)
-
-            return None
+            return None  # pragma: no cover
 
         def serialize_value(value):
             """
@@ -50,7 +47,7 @@ class APIModel(object):
             """
 
             if isinstance(value, APIModel):
-                return url_or(value, 'id')
+                return url_or(value)
 
             if isinstance(value, list):
                 return [serialize_value(v) for v in value]
