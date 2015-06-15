@@ -8,9 +8,9 @@ from .. import db
 
 
 legacy_status = [
-    'ACTIVE',
-    'LOCKED',
-    'LEGEND'
+    'ACTIVE',  # Legacy is active and editable by owner
+    'LOCKED',  # Legacy not editable due to non-payment or expiration
+    'LEGEND'   # Legacy owner is deceased and events are completed
 ]
 
 members = db.Table('flapi_legacy_members',
@@ -94,6 +94,8 @@ class Legacy(db.Model, APIModel):
 
         if person_id == self.caretaker_id and 'DECEASED' == self.owner.status:
             # Caretaker can modify Legacy only when owner is deceased
+            # Additional checks must be used to limit what caretaker can modify
+            # on the Legacy.
 
             return True
 
