@@ -8,6 +8,8 @@ from .base import BaseCase
 class PersonsTest(BaseCase):
     """ /persons/ test case """
 
+    user_count = 0
+
     def test_get_non_existing(self):
         """ GET /persons/1 on empty DB must return HTTP 404 """
 
@@ -25,9 +27,9 @@ class PersonsTest(BaseCase):
 
         self.assert200(response)
         self.assertEqual('UNPAID', response.json['status'])
-        self.assertEqual('Test First Name', response.json['first_name'])
-        self.assertEqual('Test Last Name', response.json['last_name'])
-        self.assertEqual('Test Email', response.json['email'])
+        self.assertEqual('Test first_name', response.json['first_name'])
+        self.assertEqual('Test last_name', response.json['last_name'])
+        self.assertEqual('Test email', response.json['email'])
         self.assertIn('/persons/1', response.json['_links']['self'])
 
     def test_empty_post(self):
@@ -103,12 +105,15 @@ class PersonsTest(BaseCase):
         self.assertEqual('Modified Email', p['email'])
         self.assertIn('/persons/1', p['_links']['self'])
 
-    def create_person(self):
-        """ Create a temporary test record """
+    def create_person(self, **kwargs):
+        """ Create a temporary test person record """
 
-        return self.create_resource('/persons/', {
-            'first_name': 'Test First Name',
-            'last_name': 'Test Last Name',
-            'email': 'Test Email',
-            'username': 'Test_User'
-        })
+        self.user_count += 1
+
+        for field in ['first_name', 'last_name', 'email', 'username']:
+            if field not in kwargs:
+                kwargs[field] = 'Test {}'.format(field)
+
+        kwargs['username'] += str(self.user_count)
+
+        return self.create_resource('/persons/', kwargs)
