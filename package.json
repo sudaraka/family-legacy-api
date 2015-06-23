@@ -5,6 +5,7 @@
   "main": "server.py",
   "venv_dir": "/opt/virtualenv/flapi",
   "scripts": {
+    "test": "python src/tests",
     "watch": "grunt watch",
     "setup": "mkdir -p $HOME$npm_package_venv_dir/Scripts && python -m venv $HOME$npm_package_venv_dir && touch $HOME$npm_package_venv_dir/Scripts/activate_this.py && source $HOME$npm_package_venv_dir/bin/activate && pip install -Ur requirements/development.txt",
     "doc": "sphinx-build -b html src/docs src/docs/_build"
