@@ -10,6 +10,8 @@ from ..app import create_app, db
 class BaseCase(TestCase):
     """ Base test case """
 
+    user_count = 0
+
     def create_app(self):  # pylint: disable=I0011,R0201
         """ Create application object for test environment """
 
@@ -58,3 +60,16 @@ class BaseCase(TestCase):
         self.assert200(response)
 
         return response.json
+
+    def create_person(self, **kwargs):
+        """ Create a temporary test person record """
+
+        self.user_count += 1
+
+        for field in ['first_name', 'last_name', 'email', 'username']:
+            if field not in kwargs:
+                kwargs[field] = 'Test {}'.format(field)
+
+        kwargs['username'] += str(self.user_count)
+
+        return self.create_resource('/persons/', kwargs)

@@ -11,8 +11,6 @@ from ..app.models import Legacy
 class PersonsTest(BaseCase):
     """ /persons/ test case """
 
-    user_count = 0
-
     def test_get_non_existing(self):
         """ GET /persons/1 on empty DB must return HTTP 404 """
 
@@ -204,16 +202,3 @@ class PersonsTest(BaseCase):
         self.assertLessEqual(
             abs(self.app.config.get('LEGACY_LOCK_DAYS') * 2 - lock_date.days), 1
         )
-
-    def create_person(self, **kwargs):
-        """ Create a temporary test person record """
-
-        self.user_count += 1
-
-        for field in ['first_name', 'last_name', 'email', 'username']:
-            if field not in kwargs:
-                kwargs[field] = 'Test {}'.format(field)
-
-        kwargs['username'] += str(self.user_count)
-
-        return self.create_resource('/persons/', kwargs)
