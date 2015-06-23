@@ -1,6 +1,6 @@
 """ Tests for Legacy Model """
 
-from . import BaseCase
+from .base import BaseCase
 from ..app.models import Person, Legacy
 from ..app.exceptions import IncompleteData, IncorrectData
 

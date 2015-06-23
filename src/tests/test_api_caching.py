@@ -1,6 +1,6 @@
 """ Tests for API caching functions """
 
-from . import BaseCase
+from .base import BaseCase
 
 
 class CachingTest(BaseCase):

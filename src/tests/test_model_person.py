@@ -1,6 +1,6 @@
 """ Tests for Person Model """
 
-from . import BaseCase
+from .base import BaseCase
 from ..app.models import Person, Legacy
 from ..app.exceptions import IncompleteData, AccessViolation, IncorrectData
 

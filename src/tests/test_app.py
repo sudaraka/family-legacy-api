@@ -1,6 +1,6 @@
 """ Tests for main app components """
 
-from . import BaseCase
+from .base import BaseCase
 
 
 class AppTest(BaseCase):

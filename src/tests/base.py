@@ -1,4 +1,5 @@
-""" Unit test module """
+""" Base Unit Test Case """
+
 import json
 
 from flask.ext.testing import TestCase

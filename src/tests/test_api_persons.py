@@ -2,7 +2,7 @@
 
 import json
 
-from . import BaseCase
+from .base import BaseCase
 
 
 class PersonsTest(BaseCase):

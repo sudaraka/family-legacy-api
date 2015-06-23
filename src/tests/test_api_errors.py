@@ -1,6 +1,6 @@
 """ Tests for API error handling """
 
-from . import BaseCase
+from .base import BaseCase
 
 
 class ErrorsTest(BaseCase):

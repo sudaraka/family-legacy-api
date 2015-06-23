@@ -1,6 +1,6 @@
 """ Tests for Event Model """
 
-from . import BaseCase
+from .base import BaseCase
 from ..app.models import Person, Legacy, Event
 from ..app.exceptions import IncompleteData, IncorrectData
 

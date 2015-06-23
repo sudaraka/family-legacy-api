@@ -4,7 +4,7 @@ from base64 import b64encode
 
 from flask import current_app
 
-from . import BaseCase
+from .base import BaseCase
 
 
 class AuthPersonTest(BaseCase):

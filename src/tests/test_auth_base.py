@@ -1,6 +1,6 @@
 """ Tests for /auth/* API """
 
-from . import BaseCase
+from .base import BaseCase
 
 
 class AuthBaseTest(BaseCase):
