@@ -46,7 +46,7 @@ def get_person(id):  # pylint: disable=I0011,W0622
     """
 
     if current_app.config.get('IGNORE_AUTH') is not True:
-        assert id == g.user.id, 'Access denied'
+        assert id == g.user.id, 'Access denied'  # pragma: no cover
 
     return Person.query.get_or_404(id)
 
@@ -121,7 +121,7 @@ def edit_person(id):  # pylint: disable=I0011,W0622
     """
 
     if current_app.config.get('IGNORE_AUTH') is not True:
-        assert id == g.user.id, 'Access denied'
+        assert id == g.user.id, 'Access denied'  # pragma: no cover
 
     p = Person.query.get_or_404(id)
     p.from_dict(request.json)
@@ -171,7 +171,7 @@ def accept_payment(id):  # pylint: disable=I0011,W0622
     """
 
     if current_app.config.get('IGNORE_AUTH') is not True:
-        assert id == g.user.id, 'Access denied'
+        assert id == g.user.id, 'Access denied'  # pragma: no cover
 
     p = Person.query.get_or_404(id)
 

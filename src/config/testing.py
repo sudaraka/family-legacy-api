@@ -18,3 +18,7 @@ class TestingConfiguration(BaseConfiguration):
 
     SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(app_dir,
                                                           '../../testdb.sqlite')
+
+    LEGACY_LOCK_DAYS = 15
+
+    LEGACY_EXTEND_DAYS = 45

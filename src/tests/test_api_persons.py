@@ -2,7 +2,10 @@
 
 import json
 
+from datetime import datetime
+
 from .base import BaseCase
+from ..app.models import Legacy
 
 
 class PersonsTest(BaseCase):
@@ -104,6 +107,103 @@ class PersonsTest(BaseCase):
         self.assertEqual('Modified Last Name', p['last_name'])
         self.assertEqual('Modified Email', p['email'])
         self.assertIn('/persons/1', p['_links']['self'])
+
+    def test_pay_non_existing(self):
+        """ PUT /persons/1/pay on empty DB must return HTTP 404 """
+
+        response = self.client.put('/persons/1/pay')
+
+        self.assert404(response)
+        self.assertEqual('not found', response.json['error'])
+
+    def test_only_active_or_unpaied_person_can_pay(self):
+        """
+        PUT /persons/1/pay while person status is nether ACTIVE not UNPAID
+        should return HTTP 400
+        """
+
+        self.create_person(status='DISABLED')
+
+        response = self.client.put('/persons/1/pay')
+
+        self.assert405(response)
+        self.assertIn('Current user is not allowed to make a payment',
+                      response.json['message'])
+
+        self.create_person(status='DECEASED')
+
+        response = self.client.put('/persons/2/pay')
+
+        self.assert405(response)
+        self.assertIn('Current user is not allowed to make a payment',
+                      response.json['message'])
+
+    def test_pay_activate_person(self):
+        """ PUT /persons/1/pay must set person status to ACTIVE """
+
+        self.create_person(status='UNPAID')
+
+        self.client.put('/persons/1/pay')
+
+        response = self.client.get('/persons/1')
+        self.assertEqual('ACTIVE', response.json['status'])
+
+    def test_pay_create_new_legacy(self):
+        """
+        PUT /persons/1/pay on when person doesn't have a legacy should create
+        new one
+        """
+
+        self.create_person()
+
+        self.client.put('/persons/1/pay')
+
+        response = self.client.get('/legacy/1')
+
+        self.assert200(response)
+        self.assertEqual('ACTIVE', response.json['status'])
+
+        lock_date = datetime.strptime(response.json['lock_date'],
+                                      '%a, %d %b %Y %H:%M:%S %Z')
+        lock_date -= datetime.now()
+
+        self.assertLessEqual(
+            abs(self.app.config.get('LEGACY_EXTEND_DAYS') - lock_date.days), 1
+        )
+
+    def test_pay_update_existing_legacy(self):
+        """
+        PUT /persons/1/pay on when person have a legacy should update it
+        """
+
+        self.create_person()
+        l = Legacy(owner_id=1, status='LOCKED')
+        l.save()
+
+        self.client.put('/persons/1/pay')
+
+        response = self.client.get('/legacy/1')
+
+        self.assertEqual('ACTIVE', response.json['status'])
+
+        lock_date = datetime.strptime(response.json['lock_date'],
+                                      '%a, %d %b %Y %H:%M:%S %Z')
+        lock_date -= datetime.now()
+
+        self.assertLessEqual(
+            abs(self.app.config.get('LEGACY_LOCK_DAYS') - lock_date.days), 1
+        )
+
+        self.client.put('/persons/1/pay')
+        response = self.client.get('/legacy/1')
+
+        lock_date = datetime.strptime(response.json['lock_date'],
+                                      '%a, %d %b %Y %H:%M:%S %Z')
+        lock_date -= datetime.now()
+
+        self.assertLessEqual(
+            abs(self.app.config.get('LEGACY_LOCK_DAYS') * 2 - lock_date.days), 1
+        )
 
     def create_person(self, **kwargs):
         """ Create a temporary test person record """
