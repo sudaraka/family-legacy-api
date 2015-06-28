@@ -7,7 +7,7 @@ from flask import g, current_app, request
 from .. import api, token_auth
 from ...models import Legacy, Person
 from ...decorators import json
-from ...exceptions import IncompleteData, IncorrectData
+from ...exceptions import IncorrectData, NoData
 
 
 # === Resource CRUD ============================================================
@@ -93,12 +93,12 @@ def add_members(id):  # pylint: disable=I0011,W0622
         assert l.can_modify(g.user.id), 'Access denied'
 
     if request.json is None or 'members' not in request.json:
-        raise IncompleteData('"members" was not specified')
+        raise NoData('"members" was not specified')
 
     member_list = request.json['members']
 
     if not isinstance(member_list, list):
-        raise IncorrectData('"members" is not a valid list')
+        raise IncorrectData('"members" was not a valid list')
 
     for member in member_list:
         member = str(member)
@@ -167,12 +167,12 @@ def remove_members(id):  # pylint: disable=I0011,W0622
         assert l.can_modify(g.user.id), 'Access denied'
 
     if request.json is None or 'members' not in request.json:
-        raise IncompleteData('"members" was not specified')
+        raise NoData('"members" was not specified')
 
     member_list = request.json['members']
 
     if not isinstance(member_list, list):
-        raise IncorrectData('"members" is not a valid list')
+        raise IncorrectData('"members" was not a valid list')
 
     for member in member_list:
         member = Person.query.get(member)
