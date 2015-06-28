@@ -175,3 +175,89 @@ class LegacyMembersTest(BaseCase):
         m = response.json['members'][0]
         self.assertNotIn('status', m)
         self.assertNotIn('_links', m)
+
+    def test_empty_delete_error(self):
+        """ DELETE /legacy/1/members with empty request must return HTTP 400 """
+
+        self.create_person()
+
+        self.client.put('/persons/1/pay')
+
+        response = self.client.delete('/legacy/1/members')
+
+        self.assert400(response)
+        self.assertEqual('"members" was not specified',
+                         response.json['message'])
+
+    def test_junk_delete(self):
+        """
+        DELETE /legacy/1/members without a list of members must return HTTP 400
+        """
+
+        self.create_person()
+
+        self.client.put('/persons/1/pay')
+
+        response = self.client.delete('/legacy/1/members',
+                                      data='{"members":""}',
+                                      content_type='application/json')
+
+        self.assert400(response)
+        self.assertEqual('"members" was not a valid list',
+                         response.json['message'])
+
+    def test_non_existing_member_id_delete(self):
+        """
+        DELETE /legacy/1/members with non-existing member id must still work
+        """
+
+        self.create_person()
+        self.create_person()
+
+        self.client.put('/persons/1/pay')
+
+        data = {
+            'members': [2, 4]
+        }
+
+        response = self.client.delete('/legacy/1/members',
+                                      data=json.dumps(data),
+                                      content_type='application/json')
+
+        self.assert200(response)
+
+    def test_can_delete_member(self):
+        """ DELETE /legacy/1/members can remove members """
+
+        self.create_person()
+        self.create_person()
+        self.create_person()
+        self.create_person()
+
+        self.client.put('/persons/1/pay')
+
+        data = {
+            'members': [2, 4]
+        }
+
+        self.client.post('/legacy/1/members', data=json.dumps(data),
+                         content_type='application/json')
+
+        data = {
+            'members': [2]
+        }
+
+        response = self.client.delete('/legacy/1/members',
+                                      data=json.dumps(data),
+                                      content_type='application/json')
+
+        self.assert200(response)
+
+        response = self.client.get('/legacy/1/members')
+
+        self.assertEqual(1, len(response.json['members']))
+
+        m = response.json['members'][0]
+        self.assertEqual('Test first_name4', m['first_name'])
+        self.assertEqual('Test last_name4', m['last_name'])
+        self.assertEqual('Test email4', m['email'])
