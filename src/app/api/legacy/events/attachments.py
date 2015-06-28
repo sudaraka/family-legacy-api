@@ -59,7 +59,7 @@ def get_attachments(legacy_id, event_id, att_type):
     l = Legacy.query.get_or_404(legacy_id)
 
     if current_app.config.get('IGNORE_AUTH') is not True:
-        assert l.can_view(g.user.id), 'Access denied'
+        assert l.can_view(g.user.id), 'Access denied'  # pragma: no cover
 
     e = Event.query.get_or_404(event_id)
 
@@ -99,7 +99,7 @@ def add_attachment(legacy_id, event_id, att_type):
 
     l = Legacy.query.get_or_404(legacy_id)
 
-    if current_app.config.get('IGNORE_AUTH') is not True:
+    if current_app.config.get('IGNORE_AUTH') is not True:  # pragma: no cover
         assert l.owner_id == g.user.id, 'Access denied'
         assert l.can_modify(g.user.id), 'Access denied'
 
@@ -152,7 +152,7 @@ def remove_attachment(legacy_id, event_id, att_type, id):
 
     l = Legacy.query.get_or_404(legacy_id)
 
-    if current_app.config.get('IGNORE_AUTH') is not True:
+    if current_app.config.get('IGNORE_AUTH') is not True:  # pragma: no cover
         assert l.owner_id == g.user.id, 'Access denied'
         assert l.can_modify(g.user.id), 'Access denied'
 

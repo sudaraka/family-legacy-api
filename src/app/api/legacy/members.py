@@ -49,7 +49,7 @@ def get_members(id):  # pylint: disable=I0011,W0622
     l = Legacy.query.get_or_404(id)
 
     if current_app.config.get('IGNORE_AUTH') is not True:
-        assert l.can_view(g.user.id), 'Access denied'
+        assert l.can_view(g.user.id), 'Access denied'  # pragma: no cover
 
     return {'members': [m.to_dict(public_only=True) for m in l.members]}
 
@@ -88,7 +88,7 @@ def add_members(id):  # pylint: disable=I0011,W0622
 
     l = Legacy.query.get_or_404(id)
 
-    if current_app.config.get('IGNORE_AUTH') is not True:
+    if current_app.config.get('IGNORE_AUTH') is not True:  # pragma: no cover
         assert l.owner_id == g.user.id, 'Access denied'
         assert l.can_modify(g.user.id), 'Access denied'
 
@@ -162,7 +162,7 @@ def remove_members(id):  # pylint: disable=I0011,W0622
 
     l = Legacy.query.get_or_404(id)
 
-    if current_app.config.get('IGNORE_AUTH') is not True:
+    if current_app.config.get('IGNORE_AUTH') is not True:  # pragma: no cover
         assert l.owner_id == g.user.id, 'Access denied'
         assert l.can_modify(g.user.id), 'Access denied'
 

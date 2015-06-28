@@ -52,7 +52,7 @@ def get_events(legacy_id):  # pylint: disable=I0011,W0622
     l = Legacy.query.get_or_404(legacy_id)
 
     if current_app.config.get('IGNORE_AUTH') is not True:
-        assert l.can_view(g.user.id), 'Access denied'
+        assert l.can_view(g.user.id), 'Access denied'  # pragma: no cover
 
     return {"events": [e.to_dict(True) for e in l.events]}
 
@@ -93,7 +93,7 @@ def get_event(legacy_id, id):  # pylint: disable=I0011,W0622
     l = Legacy.query.get_or_404(legacy_id)
 
     if current_app.config.get('IGNORE_AUTH') is not True:
-        assert l.can_view(g.user.id), 'Access denied'
+        assert l.can_view(g.user.id), 'Access denied'  # pragma: no cover
 
     e = Event.query.get_or_404(id)
     assert e.legacy_id == l.id, 'Access denied'
@@ -130,7 +130,7 @@ def add_event(legacy_id):  # pylint: disable=I0011,W0622
 
     l = Legacy.query.get_or_404(legacy_id)
 
-    if current_app.config.get('IGNORE_AUTH') is not True:
+    if current_app.config.get('IGNORE_AUTH') is not True:  # pragma: no cover
         assert l.owner_id == g.user.id, 'Access denied'
         assert l.can_modify(g.user.id), 'Access denied'
 
@@ -174,7 +174,7 @@ def edit_event(legacy_id, id):  # pylint: disable=I0011,W0622
 
     l = Legacy.query.get_or_404(legacy_id)
 
-    if current_app.config.get('IGNORE_AUTH') is not True:
+    if current_app.config.get('IGNORE_AUTH') is not True:  # pragma: no cover
         assert l.owner_id == g.user.id, 'Access denied'
         assert l.can_modify(g.user.id), 'Access denied'
 
@@ -214,7 +214,7 @@ def remove_event(legacy_id, id):  # pylint: disable=I0011,W0622
 
     l = Legacy.query.get_or_404(legacy_id)
 
-    if current_app.config.get('IGNORE_AUTH') is not True:
+    if current_app.config.get('IGNORE_AUTH') is not True:  # pragma: no cover
         assert l.owner_id == g.user.id, 'Access denied'
         assert l.can_modify(g.user.id), 'Access denied'
 
