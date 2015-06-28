@@ -180,7 +180,10 @@ def remove_members(id):  # pylint: disable=I0011,W0622
         if member is None:
             continue
 
-        l.members.remove(member)
+        try:
+            l.members.remove(member)
+        except ValueError:
+            pass
 
     l.save()
 
