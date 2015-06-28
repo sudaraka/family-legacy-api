@@ -110,7 +110,7 @@ def add_members(id):  # pylint: disable=I0011,W0622
                 # TODO: Invite member
                 # TODO: Queue a task to assign member on signup
 
-                return {}, 202
+                continue
         else:
             member = Person.query.get(member)
 
