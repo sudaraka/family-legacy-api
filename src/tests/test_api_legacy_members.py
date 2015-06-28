@@ -117,3 +117,61 @@ class LegacyMembersTest(BaseCase):
                                     content_type='application/json')
 
         self.assert200(response)
+
+    def test_get_existing(self):
+        """
+        GET /legacy/1/members must return public information of all members
+        """
+
+        self.create_person(avatar='http://avatar.com/test1.jpg')
+        self.create_person(avatar='http://avatar.com/test2.jpg')
+        self.create_person(avatar='http://avatar.com/test3.jpg')
+        self.create_person(avatar='http://avatar.com/test4.jpg')
+
+        self.client.put('/persons/1/pay')
+
+        data = {
+            'members': [2, 4]
+        }
+
+        self.client.post('/legacy/1/members', data=json.dumps(data),
+                         content_type='application/json')
+
+        response = self.client.get('/legacy/1/members')
+
+        self.assert200(response)
+
+        self.assertEqual(2, len(response.json['members']))
+
+        m = response.json['members'][0]
+        self.assertEqual('Test first_name2', m['first_name'])
+        self.assertEqual('Test last_name2', m['last_name'])
+        self.assertEqual('Test email2', m['email'])
+        self.assertEqual('http://avatar.com/test2.jpg', m['avatar'])
+
+        m = response.json['members'][1]
+        self.assertEqual('Test first_name4', m['first_name'])
+        self.assertEqual('Test last_name4', m['last_name'])
+        self.assertEqual('Test email4', m['email'])
+        self.assertEqual('http://avatar.com/test4.jpg', m['avatar'])
+
+    def test_no_private_fields(self):
+        """
+        GET /legacy/1/members must NOT return member's private information
+        """
+
+        self.create_person()
+        self.create_person()
+
+        self.client.put('/persons/1/pay')
+
+        self.client.post('/legacy/1/members', data='{"members":[2]}',
+                         content_type='application/json')
+
+        response = self.client.get('/legacy/1/members')
+
+        self.assert200(response)
+
+        m = response.json['members'][0]
+        self.assertNotIn('status', m)
+        self.assertNotIn('_links', m)
