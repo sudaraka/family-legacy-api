@@ -28,9 +28,9 @@ class PersonsTest(BaseCase):
 
         self.assert200(response)
         self.assertEqual('UNPAID', response.json['status'])
-        self.assertEqual('Test first_name', response.json['first_name'])
-        self.assertEqual('Test last_name', response.json['last_name'])
-        self.assertEqual('Test email', response.json['email'])
+        self.assertEqual('Test first_name1', response.json['first_name'])
+        self.assertEqual('Test last_name1', response.json['last_name'])
+        self.assertEqual('Test email1', response.json['email'])
         self.assertIn('/persons/1', response.json['_links']['self'])
 
     def test_empty_post(self):

@@ -68,8 +68,6 @@ class BaseCase(TestCase):
 
         for field in ['first_name', 'last_name', 'email', 'username']:
             if field not in kwargs:
-                kwargs[field] = 'Test {}'.format(field)
-
-        kwargs['username'] += str(self.user_count)
+                kwargs[field] = 'Test {}{}'.format(field, str(self.user_count))
 
         return self.create_resource('/persons/', kwargs)

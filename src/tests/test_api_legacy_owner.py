@@ -16,9 +16,9 @@ class LegacyOwnerTest(BaseCase):
         response = self.client.get('/legacy/1/owner')
 
         self.assert200(response)
-        self.assertEqual('Test first_name', response.json['first_name'])
-        self.assertEqual('Test last_name', response.json['last_name'])
-        self.assertEqual('Test email', response.json['email'])
+        self.assertEqual('Test first_name1', response.json['first_name'])
+        self.assertEqual('Test last_name1', response.json['last_name'])
+        self.assertEqual('Test email1', response.json['email'])
         self.assertEqual('http://avatar.com/test.jpg', response.json['avatar'])
 
     def test_no_private_fields(self):
