@@ -27,6 +27,9 @@ class LegacyEventTest(BaseCase):
         response = self.client.post('/legacy/2/events')
         self.assert404(response)
 
+        response = self.client.get('/legacy/2/events/1')
+        self.assert404(response)
+
     def test_empty_post(self):
         """ POST /legacy/1/events without any data should return HTTP 400 """
 
@@ -55,6 +58,32 @@ class LegacyEventTest(BaseCase):
 
         self.assert201(response)
         self.assertIn('/legacy/1/events/1', response.headers['location'])
+
+    def test_get_non_existing(self):
+        """ GET /legacy/1/events on empty DB must return HTTP 404 """
+
+        response = self.client.get('/legacy/1/events/1')
+
+        self.assert404(response)
+        self.assertEqual('not found', response.json['error'])
+
+    def test_get_existing(self):
+        """
+        GET /legacy/1/events/1 on DB with valid record must return it
+        """
+
+        self.create_event(1)
+
+        response = self.client.get('/legacy/1/events/1')
+
+        self.assert200(response)
+        self.assertEqual('ENABLED', response.json['status'])
+        self.assertEqual('Test name1', response.json['name'])
+        self.assertEqual('Test description1', response.json['description'])
+        self.assertEqual(6, response.json['month'])
+        self.assertEqual(29, response.json['day'])
+        self.assertIn('/legacy/1', response.json['_links']['legacy'])
+        self.assertIn('/legacy/1/events/1', response.json['_links']['self'])
 
     def create_event(self, legacy_id, **kwargs):
         """ Create a temporary test event record """
