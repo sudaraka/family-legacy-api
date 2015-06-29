@@ -36,6 +36,9 @@ class LegacyEventTest(BaseCase):
         response = self.client.put('/legacy/2/events/1')
         self.assert404(response)
 
+        response = self.client.delete('/legacy/2/events/1')
+        self.assert404(response)
+
     def test_empty_post(self):
         """ POST /legacy/1/events without any data should return HTTP 400 """
 
@@ -149,6 +152,27 @@ class LegacyEventTest(BaseCase):
         self.assertEqual(5, e['month'])
         self.assertEqual(23, e['day'])
         self.assertIn('/legacy/1/events/1', e['_links']['self'])
+
+    def test_can_delete(self):
+        """ DELETE /legacy/1/events/1 can remove members """
+
+        self.create_event(1)
+        self.create_event(1)
+        self.create_event(1)
+
+        response = self.client.get('/legacy/1/events')
+        self.assertEqual(3, len(response.json['events']))
+
+        response = self.client.delete('/legacy/1/events/2')
+
+        self.assert200(response)
+
+        response = self.client.get('/legacy/1/events')
+
+        self.assertEqual(2, len(response.json['events']))
+
+        e = response.json['events'][1]
+        self.assertEqual('Test name3', e['name'])
 
     def create_event(self, legacy_id, **kwargs):
         """ Create a temporary test event record """
