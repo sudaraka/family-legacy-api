@@ -33,6 +33,9 @@ class LegacyEventTest(BaseCase):
         response = self.client.get('/legacy/2/events/1')
         self.assert404(response)
 
+        response = self.client.put('/legacy/2/events/1')
+        self.assert404(response)
+
     def test_empty_post(self):
         """ POST /legacy/1/events without any data should return HTTP 400 """
 
@@ -113,6 +116,39 @@ class LegacyEventTest(BaseCase):
 
             self.assertNotIn('description', e)
             self.assertNotIn('legacy', e['_links'])
+
+    def test_edit_non_existing(self):
+        """ PUT /legacy/1/events/1 on empty DB must return HTTP 404 """
+
+        response = self.client.put('/legacy/1/events/1')
+
+        self.assert404(response)
+        self.assertEqual('not found', response.json['error'])
+
+    def test_edit_existing(self):
+        """ PUT /legacy/1/events/1 on DB with valid record must modify it """
+
+        self.create_event(1)
+
+        changes = {
+            'name': 'Modified Name',
+            'description': 'Modified Description',
+            'month': 5,
+            'day': 23
+        }
+
+        response = self.client.put('/legacy/1/events/1',
+                                   data=json.dumps(changes),
+                                   content_type='application/json')
+        self.assert200(response)
+
+        e = self.get_resource('/legacy/1/events/1')
+
+        self.assertEqual('Modified Name', e['name'])
+        self.assertEqual('Modified Description', e['description'])
+        self.assertEqual(5, e['month'])
+        self.assertEqual(23, e['day'])
+        self.assertIn('/legacy/1/events/1', e['_links']['self'])
 
     def create_event(self, legacy_id, **kwargs):
         """ Create a temporary test event record """
