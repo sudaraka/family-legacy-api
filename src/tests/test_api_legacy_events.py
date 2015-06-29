@@ -27,6 +27,9 @@ class LegacyEventTest(BaseCase):
         response = self.client.post('/legacy/2/events')
         self.assert404(response)
 
+        response = self.client.get('/legacy/2/events')
+        self.assert404(response)
+
         response = self.client.get('/legacy/2/events/1')
         self.assert404(response)
 
@@ -84,6 +87,32 @@ class LegacyEventTest(BaseCase):
         self.assertEqual(29, response.json['day'])
         self.assertIn('/legacy/1', response.json['_links']['legacy'])
         self.assertIn('/legacy/1/events/1', response.json['_links']['self'])
+
+    def test_get_all(self):
+        """
+        GET /legacy/1/events on DB with valid records must return all of them
+        """
+
+        self.create_event(1)
+        self.create_event(1)
+        self.create_event(1)
+        self.create_event(1)
+
+        response = self.client.get('/legacy/1/events')
+
+        self.assert200(response)
+
+        for e in response.json['events']:
+            i = response.json['events'].index(e) + 1
+
+            self.assertEqual('ENABLED', e['status'])
+            self.assertEqual('Test name{}'.format(i), e['name'])
+            self.assertEqual(6, e['month'])
+            self.assertEqual(29, e['day'])
+            self.assertIn('/legacy/1/events/{}'.format(i), e['_links']['self'])
+
+            self.assertNotIn('description', e)
+            self.assertNotIn('legacy', e['_links'])
 
     def create_event(self, legacy_id, **kwargs):
         """ Create a temporary test event record """
