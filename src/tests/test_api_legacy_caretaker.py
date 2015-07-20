@@ -123,6 +123,15 @@ class LegacyCaretakerTest(BaseCase):
         self.assertNotIn('status', response.json)
         self.assertNotIn('_links', response.json)
 
+    def test_can_delete_caretaker(self):
+        """ DELETE /legacy/1/caretaker can remove caretaker """
+
+        self.create_legacy(True)
+
+        response = self.client.delete('/legacy/1/caretaker')
+
+        self.assert200(response)
+
     def create_legacy(self, with_caretaker=False):
         """
         Create records to test:
