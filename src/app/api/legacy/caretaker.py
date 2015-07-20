@@ -93,7 +93,7 @@ def edit_caretaker(id):  # pylint: disable=I0011,W0622
 
     caretaker = request.json['caretaker']
 
-    if not bool(re.match(r'^\d+$', caretaker)):
+    if not bool(re.match(r'^\d+$', str(caretaker))):
         caretaker = Person.query.filter_by(email=caretaker).first()
 
         if caretaker is None:
