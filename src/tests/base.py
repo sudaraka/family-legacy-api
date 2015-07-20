@@ -41,6 +41,11 @@ class BaseCase(TestCase):
 
         self.assertEqual(201, response.status_code)
 
+    def assert202(self, response):
+        """ Custom assert for HTTP 202 """
+
+        self.assertEqual(202, response.status_code)
+
     def create_resource(self, url, data):
         """
         Return the HTTP response of POST of data to the given resource url
