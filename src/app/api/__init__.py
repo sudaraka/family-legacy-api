@@ -31,7 +31,7 @@ def after_request(response):
 
 @token_auth.error_handler
 @no_cache
-def unauthorized():
+def unauthorized():  # pragma: no cover
     """ Handle authentication errors """
 
     response = jsonify({
@@ -46,7 +46,7 @@ def unauthorized():
 
 
 @token_auth.verify_password
-def verify_token(*token):
+def verify_token(*token):  # pragma: no cover
     """ Verify token received via HTTP Basic Auth """
 
     if current_app.config.get('IGNORE_AUTH') is True:

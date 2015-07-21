@@ -223,7 +223,7 @@ def remove_event(legacy_id, id):  # pylint: disable=I0011,W0622
     try:
         db.session.delete(e)
         db.session.commit()
-    except IntegrityError as e:
+    except IntegrityError as e:  # pragma: no cover
         raise IncompleteData('Unable to delete ' + e.__class__.__name__ +
                              ': ' + e.args[0])
 

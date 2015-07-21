@@ -98,7 +98,7 @@ class APITokenModel(APIModel):
         }).decode('utf-8')
 
     @staticmethod
-    def verify_token(token):
+    def verify_token(token):  # pragma: no cover
         """
         Verify given token and return a new instance of the modal if valid
         """

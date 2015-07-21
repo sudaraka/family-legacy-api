@@ -65,7 +65,7 @@ def exception_incomplete_data(e):
 def exception_database_operation(e):
     """ Return HTTP 500 response for database related errors """
 
-    return jsonify({
+    return jsonify({  # pragma: no cover
         'status': 500,
         'error': 'database operation failed',
         'message': e.args[0]
@@ -77,7 +77,7 @@ def exception_database_operation(e):
 def exception_assert(e):
     """ Return HTTP 403 response when assertion is met """
 
-    return jsonify({
+    return jsonify({  # pragma: no cover
         'status': 403,
         'error': 'forbidden',
         'message': str(e)
