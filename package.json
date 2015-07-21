@@ -1,6 +1,6 @@
 {
   "name": "family-legacy-api",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "API for Family Legacy web and mobile application",
   "main": "server.py",
   "venv_dir": "/opt/virtualenv/flapi",
