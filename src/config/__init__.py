@@ -25,8 +25,8 @@ class BaseConfiguration(object):
     )
 
     # Celery
-    BROKER_URL = 'redis://localhost'
-    CELERY_RESULT_BACKEND = 'redis://localhost'
+    BROKER_URL = 'redis://localhost:35275'
+    CELERY_RESULT_BACKEND = 'redis://localhost:35275'
 
     CELERY_ACCEPT_CONTENT = ['json']
     CELERY_TASK_SERIALIZER = 'json'

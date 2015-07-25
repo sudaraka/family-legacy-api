@@ -6,3 +6,4 @@ grunt-param.json
 .coverage
 *.log
 /*.sqlite
+/*.db

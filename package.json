@@ -8,6 +8,7 @@
   "scripts": {
     "start": "python bin/manage.py runserver",
     "celery": "celery worker -A src.tasks.worker.celery",
+    "redis": "redis-server etc/redis.conf",
     "test": "python src/tests",
     "watch": "grunt watch",
     "setup": "mkdir -p $HOME$npm_package_venv_dir/Scripts && python -m venv $HOME$npm_package_venv_dir && touch $HOME$npm_package_venv_dir/Scripts/activate_this.py && source $HOME$npm_package_venv_dir/bin/activate && pip install -Ur requirements/development.txt",
