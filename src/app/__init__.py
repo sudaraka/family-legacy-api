@@ -2,6 +2,7 @@
 
 import os
 
+from celery import Celery
 from flask import Flask, render_template
 from flask.ext.sqlalchemy import SQLAlchemy
 
@@ -10,6 +11,7 @@ app_dir = os.path.abspath(os.path.dirname(__file__))
 from ..config import config_map
 
 db = SQLAlchemy()
+celery = Celery(__name__)
 
 
 def create_app(config_name):
@@ -18,7 +20,10 @@ def create_app(config_name):
     app = Flask(__name__)
 
     # Load configuration based on given name
-    app.config.from_object(config_map.get(config_name, 'dev'))
+    app.config.from_object(config_map.get(config_name, 'prod'))
+
+    # Make Celery instance use inherit the Flask configuration
+    celery.conf.update(app.config)
 
     # Initialize extensions in application context
     db.init_app(app)
