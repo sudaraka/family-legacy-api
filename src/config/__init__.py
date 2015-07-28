@@ -34,8 +34,12 @@ class BaseConfiguration(object):
 
     # Family Legacy API
     LEGACY_LOCK_DAYS = 30
-
     LEGACY_EXTEND_DAYS = 30
+
+    # Email
+    MAIL_SERVER = 'localhost'
+    MAIL_PORT = 25
+    MAIL_SENDER = 'noreplay@ourfamilylegacy.org'
 
 
 from .development import DevelopmentConfiguration

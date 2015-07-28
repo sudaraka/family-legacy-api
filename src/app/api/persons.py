@@ -8,6 +8,7 @@ from . import api, token_auth
 from ..models import Person, Legacy
 from ..decorators import json
 from ..exceptions import CanNotAcceptPayment
+from ...tasks.email import send_welcome_email
 
 
 # === Resource CRUD ============================================================
@@ -85,6 +86,11 @@ def create_person():  # pylint: disable=I0011,W0622
     p = Person()
     p.from_dict(request.json)
     p.save()
+
+    try:
+        send_welcome_email.delay(p.to_dict())
+    except:  # pylint: disable=I0011,W0702
+        pass  # Ignore email errors
 
     return {}, 201, {'Location': p.url()}
 
