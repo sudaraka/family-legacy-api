@@ -7,7 +7,6 @@
 # processname: flapid
 
 USER='flapi'
-PIDFILE='/var/run/flapid.pid'
 
 id $USER >/dev/null 2>&1
 
@@ -23,17 +22,18 @@ case "$1" in
 	start)
 		echo 'Starting flapid service'
 
-		$HOME/.virtualenv/bin/gunicorn -D \
-            -c $HOME/src/app/gunicorn.py \
-            -u $USER -g $USER \
-            -p $PIDFILE \
-            src.app.wsgi:application
+        supervisord -c $HOME/etc/supervisord.conf -d $HOME
 		;;
 	stop)
 		echo 'Stopping flapid service'
 
-		kill `cat $PIDFILE`
+        supervisorctl -c $HOME/etc/supervisord.conf shutdown
 		;;
+    restart)
+		echo 'Restarting flapid service'
+
+        supervisorctl -c $HOME/etc/supervisord.conf restart all
+        ;;
 	*)
 		echo 'Usage: service flapid {start|stop}'
 
@@ -41,4 +41,3 @@ case "$1" in
 esac
 
 exit 0
-

@@ -15,16 +15,11 @@ if os.path.exists(env_file):
             os.environ[var[0]] = var[1]
 
 
-procname = 'flapid'
-
-#user = 'flapi'
-
-#group = 'flapi'
+procname = 'flapi_httpd'
 
 workers = cpu_count() * 2 + 1
 
-
-daemon = True
+daemon = False
 
 bind = '127.0.0.1:35274'
 
