@@ -121,3 +121,4 @@ from .person import Person
 from .legacy import Legacy
 from .event import Event
 from .attachment import Attachment
+from .email import EmailTemplate
