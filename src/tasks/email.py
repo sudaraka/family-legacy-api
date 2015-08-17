@@ -32,6 +32,7 @@ def send_email(to, subject, body, sender=None):
                                         'noreplay@ourfamilylegacy.org')
 
     msg = Message(subject, sender=sender, recipients=to)
+    msg.body = body
     msg.html = body
 
     mail = Mail(current_app)
