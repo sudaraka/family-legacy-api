@@ -4,6 +4,6 @@ __pycache__
 .env
 grunt-param.json
 .coverage
-*.log
+*.log.*
 /*.sqlite
 /*.db
