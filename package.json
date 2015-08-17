@@ -1,6 +1,6 @@
 {
   "name": "family-legacy-api",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "API for Family Legacy web and mobile application",
   "main": "bin/mamage.py",
   "private": true,
