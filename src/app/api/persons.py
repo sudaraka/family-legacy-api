@@ -89,7 +89,7 @@ def create_person():  # pylint: disable=I0011,W0622
 
     if not current_app.config['TESTING']:
         try:
-            send_welcome_email.delay(p.to_dict())
+            send_welcome_email.delay(p.to_dict(), username=p.username)
         except:  # pylint: disable=I0011,W0702
             pass  # Ignore email errors
 

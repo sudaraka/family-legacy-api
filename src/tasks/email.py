@@ -1,17 +1,23 @@
 """ Email tasks """
 
-from flask import current_app
+from flask import current_app, render_template_string
 from flask.ext.mail import Mail, Message
 
 from ..app import celery
+from ..app.models.email import EmailTemplate
 
 
 @celery.task
-def send_welcome_email(person):
+def send_welcome_email(person, **kwargs):
     """ Send the welcome email on person signup """
 
-    send_email.delay(person['email'], 'Hi ' + person['first_name'],
-                     'WELCOME!!!')
+    content = render_template_string(
+        EmailTemplate.get_content('welcome'),
+        person=person,
+        username=kwargs.get('username', '')
+    )
+
+    send_email.delay(person['email'], 'Welcome to Family Legacy', content)
 
 
 @celery.task
