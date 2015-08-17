@@ -221,5 +221,3 @@ def accept_payment(id):  # pylint: disable=I0011,W0622
     p.save()
 
     return l
-
-# }}}
