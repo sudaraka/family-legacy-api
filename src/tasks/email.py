@@ -33,6 +33,7 @@ def send_email(to, subject, body, sender=None):
 
     msg = Message(subject, sender=sender, recipients=to)
     msg.body = body
+    msg.html = body
 
     mail = Mail(current_app)
     mail.send(msg)
