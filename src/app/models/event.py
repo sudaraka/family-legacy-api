@@ -88,4 +88,7 @@ class Event(db.Model, APIModel):
             result['_links']['legacy'] = result['legacy']
             del result['legacy']
 
+            for att in ['messages', 'photos']:
+                result['_links'][att] = '{}/{}'.format(self.url(), att)
+
         return result
