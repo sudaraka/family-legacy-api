@@ -36,6 +36,12 @@ class BaseConfiguration(object):
     LEGACY_LOCK_DAYS = 30
     LEGACY_EXTEND_DAYS = 30
 
+    # Content location
+    CONTENT_DIR = os.path.abspath(os.path.join(
+        os.path.dirname(__file__),
+        '../../var/content'
+    ))
+
     # Email
     MAIL_SERVER = 'localhost'
     MAIL_PORT = 25

@@ -4,6 +4,8 @@ import os
 
 from flask import g, current_app, request
 
+from werkzeug.utils import secure_filename
+
 from sqlalchemy.exc import IntegrityError
 
 from ... import api, token_auth
@@ -95,7 +97,9 @@ def add_attachment(legacy_id, event_id, att_type):
     assert att_type in ['messages', 'photos'], \
         'Unsupported attachment type "{}"'.format(att_type)
 
-    assert 'file' in request.files, 'File was not uploaded'
+    uploaded_file = request.files.get('file', None)
+
+    assert uploaded_file is not None, 'File was not uploaded'
 
     l = Legacy.query.get_or_404(legacy_id)
 
@@ -106,18 +110,38 @@ def add_attachment(legacy_id, event_id, att_type):
     e = Event.query.get_or_404(event_id)
     attachments = getattr(e, att_type)
 
-    # TODO: Save file to disk
-    # TODO: Find content type
-    # TODO: Find file size
+    # Find file size using length of the content in the BytesIO stream in
+    # uploaded_file.
+    #   1. Goto end of the stream
+    #   2. Read current position (in bytes from the begining, a.k.a length)
+    #   3. Reset stream pointer to start of the stream (other wise the saved
+    #      file will be empty).
+    uploaded_file.stream.seek(0, 2)
+    file_size = uploaded_file.stream.tell()
+    uploaded_file.stream.seek(0, 0)
 
-    f = request.files['file']
-    path = os.path.join(att_type, f.filename)
+    uploaded_file.filename = secure_filename(uploaded_file.filename)
 
-    a = Attachment(content_url=path, mime_type=f.content_type, size=10)
+    a = Attachment(content_url=uploaded_file.filename,
+                   mime_type=uploaded_file.mimetype, size=file_size)
 
     attachments.append(a)
 
     e.save()
+
+    save_path = os.path.join(current_app.config.get('CONTENT_DIR'),
+                             'legacy-{}'.format(l.id),
+                             'event-{}'.format(e.id),
+                             att_type)
+    try:
+        os.makedirs(save_path)
+    except OSError:
+        pass
+
+    uploaded_file.save(os.path.join(save_path, '{}#{}'.format(
+        str(a.id),
+        uploaded_file.filename
+    )))
 
     return {}
 

@@ -1,6 +1,7 @@
 .ropeproject/
 node_modules/
 __pycache__
+var/
 .env
 grunt-param.json
 .coverage
