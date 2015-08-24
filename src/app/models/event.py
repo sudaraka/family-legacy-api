@@ -46,10 +46,10 @@ class Event(db.Model, APIModel):
                              foreign_keys=[legacy_id])
 
     messages = db.relationship('Attachment', secondary=event_messages,
-                               backref=db.backref('message_event',
+                               backref=db.backref('messages_event',
                                                   uselist=False))
     photos = db.relationship('Attachment', secondary=event_photos,
-                             backref=db.backref('photo_event', uselist=False))
+                             backref=db.backref('photos_event', uselist=False))
 
     def url(self):
         """ Return the HTTP GET URL for this object """

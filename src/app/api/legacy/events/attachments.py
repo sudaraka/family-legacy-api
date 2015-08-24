@@ -180,14 +180,32 @@ def remove_attachment(legacy_id, event_id, att_type, id):
         assert l.owner_id == g.user.id, 'Access denied'
         assert l.can_modify(g.user.id), 'Access denied'
 
-    # TODO: Delete file from disk
-
     e = Event.query.get_or_404(event_id)
     a = Attachment.query.get_or_404(id)
+
+    # Make sure the attachment belongs to the event and type specified in URL
+    ae = getattr(a, '{}_event'.format(att_type))
+
+    if ae is None:
+        raise IncompleteData('Attachment {} is not in {} of event {}'.format(
+            a.id, att_type, e.id
+        ))
 
     try:
         db.session.delete(a)
         db.session.commit()
+
+        delete_file = os.path.join(current_app.config.get('CONTENT_DIR'),
+                                   'legacy-{}'.format(l.id),
+                                   'event-{}'.format(e.id),
+                                   att_type,
+                                   '{}#{}'.format(a.id, a.content_url))
+
+        os.remove(delete_file)
+    except OSError:
+        # Ignore error that might occur when deleting the disk file.
+        # Cleanup process should take care of the orphaned file.
+        pass
     except IntegrityError as e:
         raise IncompleteData('Unable to delete ' + e.__class__.__name__ +
                              ': ' + e.args[0])
