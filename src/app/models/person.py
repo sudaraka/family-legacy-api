@@ -87,6 +87,10 @@ class Person(db.Model, APITokenModel):
         if 0 < len(result['legacy']):
             result['_links']['legacy'] = result['legacy'][0]
 
+        if self.status in ['ACTIVE', 'UNPAID']:
+            result['_links']['pay'] = url_for('api.accept_payment', id=self.id,
+                                              _external=True)
+
         del result['legacy']
 
         if public_only:
