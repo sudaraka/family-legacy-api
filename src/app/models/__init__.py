@@ -122,3 +122,4 @@ from .legacy import Legacy
 from .event import Event
 from .attachment import Attachment
 from .email import EmailTemplate
+from .paypal_log import PayPalLog

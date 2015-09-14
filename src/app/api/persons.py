@@ -5,9 +5,9 @@ import datetime
 from flask import request, g, current_app
 
 from . import api, token_auth
-from ..models import Person, Legacy
+from ..models import Person, Legacy, PayPalLog
 from ..decorators import json
-from ..exceptions import CanNotAcceptPayment, Http403
+from ..exceptions import CanNotAcceptPayment, Http403, Unpaid
 from ...tasks.email import send_welcome_email
 
 
@@ -190,8 +190,12 @@ def accept_payment(id):  # pylint: disable=I0011,W0622
         raise CanNotAcceptPayment()
 
     #
-    # TODO: Process payment using the information in request payload
+    # TODO: *MUST* check for transaction type and make it as utilized
     #
+    payment_record = PayPalLog.query.filter_by(person=p).first()
+
+    if payment_record is None:
+        raise Unpaid('Legacy profile activation payment not found')
 
     # Get person's legacy
     l = p.legacy

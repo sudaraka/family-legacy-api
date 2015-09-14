@@ -1,11 +1,6 @@
 """ Application wide exceptions """
 
 
-class AccessViolation(Exception):
-    """ Attempt to read from restricted model property """
-    pass
-
-
 class IncorrectData(AttributeError):
     """ JSON data given in the HTTP request is not acceptable """
     pass
@@ -30,4 +25,14 @@ class CanNotAcceptPayment(Exception):
 
 class Http403(Exception):
     """ Throwable exception that will cause API call to return HTTP 403 """
+    pass
+
+
+class Unpaid(Http403):
+    """ Not payment record found in the log """
+    pass
+
+
+class AccessViolation(Http403):
+    """ Attempt to read from restricted model property """
     pass
