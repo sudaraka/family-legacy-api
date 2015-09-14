@@ -5,6 +5,7 @@ from flask import g, current_app
 from .. import api, token_auth
 from ...models import Legacy
 from ...decorators import json
+from ...exceptions import Http403
 
 
 # === Resource CRUD ============================================================
@@ -44,7 +45,8 @@ def get_legacy(id):  # pylint: disable=I0011,W0622
 
     l = Legacy.query.get_or_404(id)
 
-    if current_app.config.get('IGNORE_AUTH') is not True:
-        assert l.can_view(g.user.id), 'Access denied'  # pragma: no cover
+    if current_app.config.get('IGNORE_AUTH') is not True:  # pragma: no cover
+        if not l.can_view(g.user.id):
+            raise Http403('Access denied')
 
     return l

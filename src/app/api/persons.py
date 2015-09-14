@@ -7,7 +7,7 @@ from flask import request, g, current_app
 from . import api, token_auth
 from ..models import Person, Legacy
 from ..decorators import json
-from ..exceptions import CanNotAcceptPayment
+from ..exceptions import CanNotAcceptPayment, Http403
 from ...tasks.email import send_welcome_email
 
 
@@ -47,7 +47,8 @@ def get_person(id):  # pylint: disable=I0011,W0622
     """
 
     if current_app.config.get('IGNORE_AUTH') is not True:
-        assert id == g.user.id, 'Access denied'  # pragma: no cover
+        if id != g.user.id:  # pragma: no cover
+            raise Http403('Access denied')
 
     return Person.query.get_or_404(id)
 
@@ -128,7 +129,8 @@ def edit_person(id):  # pylint: disable=I0011,W0622
     """
 
     if current_app.config.get('IGNORE_AUTH') is not True:
-        assert id == g.user.id, 'Access denied'  # pragma: no cover
+        if id != g.user.id:  # pragma: no cover
+            raise Http403('Access denied')
 
     p = Person.query.get_or_404(id)
     p.from_dict(request.json)
@@ -178,7 +180,8 @@ def accept_payment(id):  # pylint: disable=I0011,W0622
     """
 
     if current_app.config.get('IGNORE_AUTH') is not True:
-        assert id == g.user.id, 'Access denied'  # pragma: no cover
+        if id != g.user.id:  # pragma: no cover
+            raise Http403('Access denied')
 
     p = Person.query.get_or_404(id)
 

@@ -5,7 +5,7 @@ from flask import jsonify
 from sqlalchemy.exc import OperationalError
 
 from . import api
-from ..exceptions import IncompleteData, NoData, IncorrectData
+from ..exceptions import IncompleteData, NoData, IncorrectData, Http403
 from ..exceptions import CanNotAcceptPayment
 from ..decorators import no_cache
 
@@ -73,6 +73,7 @@ def exception_database_operation(e):
 
 
 @api.app_errorhandler(AssertionError)
+@api.app_errorhandler(Http403)
 @no_cache
 def exception_assert(e):
     """ Return HTTP 403 response when assertion is met """

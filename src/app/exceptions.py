@@ -25,5 +25,9 @@ class CanNotAcceptPayment(Exception):
     """
     User is not in a state (ACTIVE not UNPAID) that system can access payment
     """
+    pass
 
+
+class Http403(Exception):
+    """ Throwable exception that will cause API call to return HTTP 403 """
     pass

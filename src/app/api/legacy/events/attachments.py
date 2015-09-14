@@ -12,7 +12,7 @@ from ... import api, token_auth
 from .... import db
 from ....models import Legacy, Event, Attachment
 from ....decorators import json
-from ....exceptions import IncompleteData
+from ....exceptions import IncompleteData, IncorrectData, Http403, NoData
 
 # === Resource CRUD ============================================================
 
@@ -55,13 +55,14 @@ def get_attachments(legacy_id, event_id, att_type):
     :statuscode 404: no legacy or event record with given id
     """
 
-    assert att_type in ['messages', 'photos'], \
-        'Unsupported attachment type "{}"'.format(att_type)
+    if att_type not in ['messages', 'photos']:
+        raise IncorrectData('Unsupported attachment type "{}"'.format(att_type))
 
     l = Legacy.query.get_or_404(legacy_id)
 
-    if current_app.config.get('IGNORE_AUTH') is not True:
-        assert l.can_view(g.user.id), 'Access denied'  # pragma: no cover
+    if current_app.config.get('IGNORE_AUTH') is not True:  # pragma: no cover
+        if not l.can_view(g.user.id):
+            raise Http403('Access denied')
 
     e = Event.query.get_or_404(event_id)
 
@@ -94,18 +95,22 @@ def add_attachment(legacy_id, event_id, att_type):
     :statuscode 404: no legacy/event record with given id
     """
 
-    assert att_type in ['messages', 'photos'], \
-        'Unsupported attachment type "{}"'.format(att_type)
+    if att_type not in ['messages', 'photos']:
+        raise IncorrectData('Unsupported attachment type "{}"'.format(att_type))
 
     uploaded_file = request.files.get('file', None)
 
-    assert uploaded_file is not None, 'File was not uploaded'
+    if uploaded_file is None:
+        raise NoData('File was not uploaded')
 
     l = Legacy.query.get_or_404(legacy_id)
 
     if current_app.config.get('IGNORE_AUTH') is not True:  # pragma: no cover
-        assert l.owner_id == g.user.id, 'Access denied'
-        assert l.can_modify(g.user.id), 'Access denied'
+        if l.owner_id != g.user.id:
+            raise Http403('Access denied')
+
+        if not l.can_modify(g.user.id):
+            raise Http403('Access denied')
 
     e = Event.query.get_or_404(event_id)
     attachments = getattr(e, att_type)
@@ -171,14 +176,17 @@ def remove_attachment(legacy_id, event_id, att_type, id):
     :statuscode 404: no legacy/event record with given id
     """
 
-    assert att_type in ['messages', 'photos'], \
-        'Unsupported attachment type "{}"'.format(att_type)
+    if att_type not in ['messages', 'photos']:
+        raise IncorrectData('Unsupported attachment type "{}"'.format(att_type))
 
     l = Legacy.query.get_or_404(legacy_id)
 
     if current_app.config.get('IGNORE_AUTH') is not True:  # pragma: no cover
-        assert l.owner_id == g.user.id, 'Access denied'
-        assert l.can_modify(g.user.id), 'Access denied'
+        if l.owner_id != g.user.id:
+            raise Http403('Access denied')
+
+        if not l.can_modify(g.user.id):
+            raise Http403('Access denied')
 
     e = Event.query.get_or_404(event_id)
     a = Attachment.query.get_or_404(id)
