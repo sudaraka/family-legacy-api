@@ -3,6 +3,7 @@
 manage.py: run application related commands
 """
 
+import inspect
 import os
 import sys
 
@@ -19,7 +20,7 @@ if os.path.exists('.env'):
 from flask.ext.script import Manager
 from flask.ext.migrate import Migrate, MigrateCommand
 
-from src.app import create_app, db, models
+from src.app import create_app, db, models, cmd
 
 
 app = create_app(os.environ.get('FLASK_CONFIG', 'prod'))
@@ -27,6 +28,10 @@ migrate = Migrate(app, db)
 manager = Manager(app)
 
 manager.add_command('db', MigrateCommand)
+
+
+for c in [c for (_, c) in inspect.getmembers(cmd) if inspect.isclass(c)]:
+    manager.add_command(c.command, c)
 
 
 @manager.shell
