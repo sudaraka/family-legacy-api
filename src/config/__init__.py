@@ -35,6 +35,7 @@ class BaseConfiguration(object):
     # Family Legacy API
     LEGACY_LOCK_DAYS = 30
     LEGACY_EXTEND_DAYS = 30
+    EVENT_RUN_COUNT = 2
 
     # Content location
     CONTENT_DIR = os.path.abspath(os.path.join(
