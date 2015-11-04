@@ -39,6 +39,7 @@ class Event(db.Model, APIModel):
     month = db.Column(db.Integer, nullable=False, index=True)
     day = db.Column(db.Integer, nullable=False, index=True)
     run_count = db.Column(db.Integer, nullable=False, default=0)
+    last_run = db.Column(db.Date)
 
     # Legacy: many-to-one relationship with Legacy
     legacy_id = db.Column(db.Integer, db.ForeignKey('flapi_legacy.id'),

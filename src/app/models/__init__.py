@@ -1,5 +1,7 @@
 """ Data Models """
 
+import datetime
+
 from importlib import import_module
 from flask import current_app
 from sqlalchemy.exc import IntegrityError
@@ -51,6 +53,9 @@ class APIModel(object):
 
             if isinstance(value, list):
                 return [serialize_value(v) for v in value]
+
+            if isinstance(value, datetime.date):
+                return value.strftime('%Y-%m-%d')
 
             return value
 
