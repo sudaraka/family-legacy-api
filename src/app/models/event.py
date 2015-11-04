@@ -1,10 +1,13 @@
 """ Event data model """
 
-from flask import url_for
+import datetime
+
+from flask import url_for, current_app
 
 from . import APIModel
 from .. import db
 from ..exceptions import IncorrectData
+from ...tasks.email import send_event_run_email
 
 
 event_status = [
@@ -94,3 +97,20 @@ class Event(db.Model, APIModel):
                 result['_links'][att] = '{}/{}'.format(self.url(), att)
 
         return result
+
+    def run(self):
+        """ Send event related message to all members """
+
+        for member in self.legacy.members:
+            send_event_run_email.delay(
+                self.to_dict(),
+                self.legacy.owner.to_dict(),
+                member.to_dict()
+            )
+
+        self.last_run = datetime.date.today()
+        self.run_count += 1
+        if self.run_count >= current_app.config.get('EVENT_RUN_COUNT'):
+            self.status = 'DISABLED'
+
+        self.save()

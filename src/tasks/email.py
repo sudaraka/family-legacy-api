@@ -8,6 +8,24 @@ from ..app.models.email import EmailTemplate
 
 
 @celery.task
+def send_event_run_email(event, owner, member):
+    """ Send the email to members of a legacy on the day of email """
+
+    content = render_template_string(
+        EmailTemplate.get_content('event'),
+        event=event,
+        owner=owner,
+        member=member,
+        event_url='#'
+    )
+
+    send_email.delay(member['email'], 'Legacy of {} {}'.format(
+        owner['first_name'],
+        owner['last_name']
+    ), content)
+
+
+@celery.task
 def send_welcome_email(person, **kwargs):
     """ Send the welcome email on person signup """
 
