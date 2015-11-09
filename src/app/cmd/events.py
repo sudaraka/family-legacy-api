@@ -21,6 +21,10 @@ class EventsCommand(Command):
 
         today = datetime.datetime.now()
 
+        current_app.logger.info('Running events for {}/{}'.format(
+            today.month, today.day
+        ))
+
         owner = aliased(Person)
 
         event_list = Event.query.join(Legacy).join(owner, Legacy.owner).filter(

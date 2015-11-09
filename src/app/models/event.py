@@ -102,6 +102,11 @@ class Event(db.Model, APIModel):
         """ Send event related message to all members """
 
         for member in self.legacy.members:
+            current_app.logger.info('Sending event "{}" to {}'.format(
+                self.name,
+                member.email
+            ))
+
             send_event_run_email.delay(
                 self.to_dict(),
                 self.legacy.owner.to_dict(),
