@@ -1,6 +1,7 @@
 """ Application Configurations """
 
 import os
+import logging
 
 
 class BaseConfiguration(object):
@@ -8,6 +9,8 @@ class BaseConfiguration(object):
 
     # Flask
     DEBUG = True
+
+    TESTING = False
 
     IGNORE_AUTH = False
 
@@ -47,6 +50,11 @@ class BaseConfiguration(object):
     MAIL_SERVER = 'localhost'
     MAIL_PORT = 25
     MAIL_SENDER = 'noreplay@ourfamilylegacy.org'
+
+    # Logging
+    ERROR_MAIL_RECEIVERS = ['info@ourfamilylegacy.org']
+    ERROR_EMAIL_LEVEL = logging.ERROR
+    LOG_LEVEL = logging.DEBUG
 
 
 from .development import DevelopmentConfiguration

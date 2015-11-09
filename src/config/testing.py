@@ -1,6 +1,7 @@
 """ Testing environment configuration settings """
 
 import os
+import logging
 
 from ..app import app_dir
 
@@ -22,3 +23,5 @@ class TestingConfiguration(BaseConfiguration):
     LEGACY_LOCK_DAYS = 15
 
     LEGACY_EXTEND_DAYS = 45
+
+    LOG_LEVEL = logging.WARNING

@@ -1,6 +1,7 @@
 """ Production environment configuration settings """
 
 import os
+import logging
 
 from . import BaseConfiguration
 
@@ -16,3 +17,8 @@ class ProductionConfiguration(BaseConfiguration):
 
     # No fall-back for SECRET_KEY in production
     SECRET_KEY = os.environ.get('FLAPI_SECRET_KEY')
+
+    ERROR_MAIL_RECEIVERS = ['info@ourfamilylegacy.org',
+                            'sudaraka.wijesinghe@gmail.com']
+
+    LOG_LEVEL = logging.ERROR
