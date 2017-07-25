@@ -16,6 +16,7 @@
     "url": "https://bitbucket.org/sudaraka/family-legacy-api"
   },
   "author": "Sudaraka Wijesinghe <sudaraka@sudaraka.org> (http://sudaraka.org/)",
+  "license": "UNLICENSED",
   "devDependencies": {
     "grunt": "^0.4.5",
     "grunt-cli": "^0.1.13",
